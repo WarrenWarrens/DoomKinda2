@@ -6,16 +6,22 @@ extends Node
 var health = 100
 var max_health = 200
 
-var armour = 0
+var armour = 25
 var max_armour = 100
 
-var stamina = 100
-var max_stamina = 100
-var stamina_regen = 15
+var stamina = 100.0
+var max_stamina = 100.0
+var stamina_regen = 15.0
 
 var battlestamina = 100
 var max_battlestamina = 100
 var battlestamina_regen = 15
+
+
+var stamina_delay_timer: float = 0.0
+var b_stamina_delay_timer: float = 0.0
+var current_stamina_regen: float = 0.0
+var current_b_stamina_regen: float = 0.0
 
 var action = true
 
@@ -112,10 +118,10 @@ func get_armour():
 	return str(armour)
 	
 func get_stamina():
-	return str(stamina)
+	return str(int(stamina))
 	
 func get_battlestamina():
-	return str(battlestamina)
+	return str(int(battlestamina))
 	
 func get_action():
 	return action
@@ -131,38 +137,25 @@ func change_stealth():
 func get_stealth():
 	return is_stealth
 
-#
-#func staminausage():
-	#canregen = false
-	#regenstamina
-#func _damage_player()
-#
-#--- can_passive_heal = false
-#
-#--- ## Damage code goes here
-#
-#--- regenHealthTimer.start()
-#
-#-
-#
-#-
-#
-#- func _on_passiveHealtimer_timeout():
-#
-#--- can_regen_health = true
-#
-#--- _regen_health()
-#
-#-
-#
-#-
-#
-#- func _regen_health():
-#
-#--- If player_health < regen_cap and can_regen_health == true:
-#
-#--- --- player_health += regen_increment
-#
-#--- --- yield(get_tree.create_timer(regen_rate, "timeout")
-#
-#--- ---_regen_health() 
+
+func _process(delta: float) -> void:
+	# 1. Regular Stamina Regen
+	if stamina_delay_timer > 0:
+		stamina_delay_timer -= delta
+		current_stamina_regen = 0.0 # Reset the gradual ramp-up
+	elif stamina < max_stamina:
+		# 1.5x multiplier if crouching/stealth
+		var stealth_mult = 1.5 if is_stealth else 1.0 
+		# Lerp creates a smooth acceleration curve
+		current_stamina_regen = lerp(current_stamina_regen, stamina_regen * stealth_mult, delta * 2.0)
+		change_stamina(current_stamina_regen * delta)
+
+	# 2. Battle Stamina Regen
+	if b_stamina_delay_timer > 0:
+		b_stamina_delay_timer -= delta
+		current_b_stamina_regen = 0.0
+	elif battlestamina < max_battlestamina:
+		var stealth_mult = 1.5 if is_stealth else 1.0
+		current_b_stamina_regen = lerp(current_b_stamina_regen, battlestamina_regen * stealth_mult, delta * 2.0)
+		change_battlestamina(current_b_stamina_regen * delta)
+		

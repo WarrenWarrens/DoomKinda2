@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dvewtmm6d837k"]
 
 [ext_resource type="FontFile" uid="uid://e1yckbnmsyen" path="res://Assets/Art/daydream_3/Daydream DEMO.otf" id="1_37p78"]
-[ext_resource type="Script" uid="uid://cg8yakgevo7wv" path="res://HUD.gd" id="1_64ctp"]
+[ext_resource type="Script" uid="uid://cg8yakgevo7wv" path="res://Scripts/HUD.gd" id="1_64ctp"]
 [ext_resource type="Texture2D" uid="uid://bfd5kbp81qf1x" path="res://Assets/Art/over.png" id="3_8sq4i"]
 
 [sub_resource type="Theme" id="Theme_ttpud"]

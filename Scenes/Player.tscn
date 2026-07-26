@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://ckudr8chj1kgo"]
 
 [ext_resource type="Script" uid="uid://b0gd8hrqpvtbb" path="res://Scripts/Player.gd" id="1_onrkg"]
-[ext_resource type="Script" uid="uid://cmbh3agxejfg" path="res://Scenes/Soul.gd" id="2_gntrk"]
 [ext_resource type="PackedScene" uid="uid://bdxry7miuj5j7" path="res://Scenes/Axe.tscn" id="2_kyqiw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ttpud"]
@@ -15,7 +14,6 @@ shape = SubResource("CapsuleShape3D_ttpud")
 
 [node name="Head" type="Node3D" parent="." unique_id=1608205757]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-script = ExtResource("2_gntrk")
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=1033066276]
 

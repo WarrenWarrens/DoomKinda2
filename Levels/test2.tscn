@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://bkhxcqsquw1yg" path="res://addons/func_godot/func_godot_default_map_settings.tres" id="2_rygiw"]
 [ext_resource type="Texture2D" uid="uid://cyg2snr1w5xw5" path="res://addons/func_godot/textures/default_texture.png" id="3_ins45"]
 [ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Player.tscn" id="4_wt7rh"]
-[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://HUD.tscn" id="5_rygiw"]
+[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://Scenes/HUD.tscn" id="5_rygiw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6o3jl"]
 albedo_texture = ExtResource("3_ins45")
