@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://cxpj1wu8ip3mo"]
+
+[ext_resource type="Script" uid="uid://4t2l518038va" path="res://Scripts/Melee.gd" id="1_867j4"]
+[ext_resource type="Texture2D" uid="uid://dkqtfjo6f58gj" path="res://Assets/Art/Fist/KNGFA0.png" id="2_867j4"]
+[ext_resource type="Texture2D" uid="uid://drafg45ksuilm" path="res://Assets/Art/Fist/KNGFB0.png" id="3_bfces"]
+[ext_resource type="Texture2D" uid="uid://qsvaadlju8al" path="res://Assets/Art/Fist/KNGFD0.png" id="4_brw2a"]
+[ext_resource type="Texture2D" uid="uid://dm23xbjaglu6q" path="res://Assets/Art/focus.png" id="13_246ci"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_exva3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_867j4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_bfces")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_brw2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_brw2a")
+}],
+"loop": 0,
+"name": &"Attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_867j4")
+}],
+"loop": 0,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="Fist" type="Node3D" unique_id=373542889]
+script = ExtResource("1_867j4")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1876754425]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1502333828]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 126.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WeaponSprite" type="AnimatedSprite2D" parent="CanvasLayer/Control" unique_id=114979047]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_exva3")
+animation = &"Attack"
+
+[node name="GunRays" type="Node3D" parent="." unique_id=282192932]
+
+[node name="RayCast3D" type="RayCast3D" parent="GunRays" unique_id=1125729014]
+target_position = Vector3(0, 0, -0.5)
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1842195551]
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer2" unique_id=423985085]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer2/CenterContainer" unique_id=1067906239]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("13_246ci")

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ci76extjrko88"]
+
+[ext_resource type="Script" uid="uid://c4g2lkmf33gad" path="res://Scripts/muzzle_flash.gd" id="1_ibyan"]
+
+[node name="MuzzleFlash" type="OmniLight3D" unique_id=205335493]
+light_energy = 16.0
+script = ExtResource("1_ibyan")
+
+[node name="Timer" type="Timer" parent="." unique_id=1667700172]
+wait_time = 0.005
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

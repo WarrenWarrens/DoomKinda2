@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://t6w4s5v8gy6l"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ttpud"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" unique_id=1193511149 groups=["Enemy"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=963722621]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_ttpud")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=1441836427]
+
+[node name="RayCast3D" type="RayCast3D" parent="." unique_id=990329114]
+
+[node name="Timer" type="Timer" parent="." unique_id=651444328]

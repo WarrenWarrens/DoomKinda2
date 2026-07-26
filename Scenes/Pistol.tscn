@@ -1,0 +1,284 @@
+[gd_scene format=3 uid="uid://bqmqhk1fsyhsm"]
+
+[ext_resource type="Script" uid="uid://cl1k5arsgig02" path="res://Scripts/Gun.gd" id="1_cvufa"]
+[ext_resource type="Texture2D" uid="uid://de508qvatmtfo" path="res://Assets/Art/Dual Beretta/B92IA0.png" id="1_pfsdd"]
+[ext_resource type="Texture2D" uid="uid://djfufjhpuahf8" path="res://Assets/Art/Dual Beretta/B92LA0.png" id="2_cvufa"]
+[ext_resource type="Texture2D" uid="uid://brof1l5ath5gk" path="res://Assets/Art/Dual Beretta/B92LB0.png" id="3_dfu4m"]
+[ext_resource type="Texture2D" uid="uid://bqh554o8nyerw" path="res://Assets/Art/Dual Beretta/B92LC0.png" id="4_nmwvo"]
+[ext_resource type="Texture2D" uid="uid://24pm6pya3qy3" path="res://Assets/Art/Dual Beretta/B92LD0.png" id="5_wg6nb"]
+[ext_resource type="Texture2D" uid="uid://dwv4cvwo2q4s2" path="res://Assets/Art/Dual Beretta/B92LE0.png" id="6_mrs54"]
+[ext_resource type="Texture2D" uid="uid://bqddohlcqej4u" path="res://Assets/Art/Dual Beretta/B92LF0.png" id="7_40bow"]
+[ext_resource type="Texture2D" uid="uid://dm23xbjaglu6q" path="res://Assets/Art/focus.png" id="9_dfu4m"]
+[ext_resource type="Texture2D" uid="uid://cvijd1xidolpm" path="res://Assets/Art/Dual Beretta/B92RA0.png" id="9_w0wbe"]
+[ext_resource type="Texture2D" uid="uid://dqfkaj7fxymho" path="res://Assets/Art/Dual Beretta/B92RB0.png" id="10_44eke"]
+[ext_resource type="Texture2D" uid="uid://ddq3mw88pbsgj" path="res://Assets/Art/Dual Beretta/B92RD0.png" id="11_tgh4j"]
+[ext_resource type="Texture2D" uid="uid://6uk4koeduxn8" path="res://Assets/Art/Dual Beretta/B92RE0.png" id="12_mb2s5"]
+[ext_resource type="Texture2D" uid="uid://diqmybrajtqiw" path="res://Assets/Art/Dual Beretta/B92RF0.png" id="13_d70sf"]
+[ext_resource type="Texture2D" uid="uid://dhigk44ewetlx" path="res://Assets/Art/Dual Beretta/R92LA0.png" id="14_5ra56"]
+[ext_resource type="Texture2D" uid="uid://clqr7fbbm3d6h" path="res://Assets/Art/Dual Beretta/R92LB0.png" id="15_5qe3u"]
+[ext_resource type="Texture2D" uid="uid://im7mp3l7ujn6" path="res://Assets/Art/Dual Beretta/R92LC0.png" id="16_hi3ht"]
+[ext_resource type="Texture2D" uid="uid://drs7o6um3mf0c" path="res://Assets/Art/Dual Beretta/R92LD0.png" id="17_8fa14"]
+[ext_resource type="Texture2D" uid="uid://du6hlij0dtw5y" path="res://Assets/Art/Dual Beretta/R92LE0.png" id="18_02uql"]
+[ext_resource type="Texture2D" uid="uid://dm4hn3p3ukqkm" path="res://Assets/Art/Dual Beretta/R92LF0.png" id="19_7n2ku"]
+[ext_resource type="Texture2D" uid="uid://3jsv3pju0is3" path="res://Assets/Art/Dual Beretta/R92LG0.png" id="20_5slxs"]
+[ext_resource type="Texture2D" uid="uid://cyw2bjdjcvwav" path="res://Assets/Art/Dual Beretta/R92LH0.png" id="21_g18na"]
+[ext_resource type="Texture2D" uid="uid://16nj0qt1d0wo" path="res://Assets/Art/Dual Beretta/R92LI0.png" id="22_5h1ex"]
+[ext_resource type="Texture2D" uid="uid://qh471xefs5dd" path="res://Assets/Art/Dual Beretta/R92LJ0.png" id="23_j5bqc"]
+[ext_resource type="Texture2D" uid="uid://c082mdcdm7f16" path="res://Assets/Art/Dual Beretta/R92LK0.png" id="24_ga7xc"]
+[ext_resource type="Texture2D" uid="uid://bf5ysrvu8hen2" path="res://Assets/Art/Dual Beretta/R92LL0.png" id="25_hkq4a"]
+[ext_resource type="Texture2D" uid="uid://dk4ar0o4okfap" path="res://Assets/Art/Dual Beretta/R92RA0.png" id="26_qqqjb"]
+[ext_resource type="Texture2D" uid="uid://dgkrabjuxnx47" path="res://Assets/Art/Dual Beretta/R92RB0.png" id="27_tso4d"]
+[ext_resource type="Texture2D" uid="uid://8qigwl8ktemx" path="res://Assets/Art/Dual Beretta/R92RC0.png" id="28_6meqq"]
+[ext_resource type="Texture2D" uid="uid://bhrj37lkdorg1" path="res://Assets/Art/Dual Beretta/R92RD0.png" id="29_ewfxr"]
+[ext_resource type="Texture2D" uid="uid://c08eghs7ji8un" path="res://Assets/Art/Dual Beretta/R92RE0.png" id="30_dmbbx"]
+[ext_resource type="Texture2D" uid="uid://beoffpptnnaxg" path="res://Assets/Art/Dual Beretta/R92RF0.png" id="31_7bu02"]
+[ext_resource type="Texture2D" uid="uid://co13t11bbxvy4" path="res://Assets/Art/Dual Beretta/R92RG0.png" id="32_ruql2"]
+[ext_resource type="Texture2D" uid="uid://bkisisyd7g71j" path="res://Assets/Art/Dual Beretta/R92RH0.png" id="33_khbo7"]
+[ext_resource type="Texture2D" uid="uid://b2nwhrvpfe3bb" path="res://Assets/Art/Dual Beretta/R92RI0.png" id="34_s5nt4"]
+[ext_resource type="Texture2D" uid="uid://blamfind4emxb" path="res://Assets/Art/Dual Beretta/R92RJ0.png" id="35_p3vkg"]
+[ext_resource type="Texture2D" uid="uid://bf6bfcgy0qvpg" path="res://Assets/Art/Dual Beretta/R92RK0.png" id="36_4otgh"]
+[ext_resource type="Texture2D" uid="uid://bbk608ro4r73c" path="res://Assets/Art/Dual Beretta/R92RL0.png" id="37_4h55o"]
+[ext_resource type="Texture2D" uid="uid://csq6pni5n7gj5" path="res://Assets/Art/Dual Beretta/D92RD0.png" id="38_o8noy"]
+[ext_resource type="Texture2D" uid="uid://bci4wev7l0hse" path="res://Assets/Art/Dual Beretta/D92RC0.png" id="39_df63q"]
+[ext_resource type="Texture2D" uid="uid://njpi7yetvp4l" path="res://Assets/Art/Dual Beretta/D92RB0.png" id="40_em6id"]
+[ext_resource type="Texture2D" uid="uid://cd657civbyrvn" path="res://Assets/Art/Dual Beretta/D92RA0.png" id="41_idvmm"]
+[ext_resource type="Texture2D" uid="uid://cmvu5ckrj8m4v" path="res://Assets/Art/Dual Beretta/D92RK0.png" id="42_qdvkq"]
+[ext_resource type="Texture2D" uid="uid://bt0bb24w3nud3" path="res://Assets/Art/Dual Beretta/D92RJ0.png" id="43_12gnt"]
+[ext_resource type="Texture2D" uid="uid://b0jjkvtbk8eun" path="res://Assets/Art/Dual Beretta/D92RI0.png" id="44_pugxl"]
+[ext_resource type="Texture2D" uid="uid://0fn4yjwtntkp" path="res://Assets/Art/Dual Beretta/D92RH0.png" id="45_tjpa5"]
+[ext_resource type="Texture2D" uid="uid://tu6dg0hqfyb3" path="res://Assets/Art/Dual Beretta/D92RG0.png" id="46_jvqfg"]
+[ext_resource type="Texture2D" uid="uid://d76hbso0mke8" path="res://Assets/Art/Dual Beretta/D92RF0.png" id="47_4xvg0"]
+[ext_resource type="Texture2D" uid="uid://b7l1q5xwdhkbm" path="res://Assets/Art/Dual Beretta/D92RE0.png" id="48_brubf"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_walli"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_pfsdd")
+}],
+"loop": 1,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_pfsdd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_cvufa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_dfu4m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_nmwvo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_wg6nb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_mrs54")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_40bow")
+}],
+"loop": 1,
+"name": &"Shoot",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_40bow")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_w0wbe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_44eke")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_tgh4j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_mb2s5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_d70sf")
+}],
+"loop": 1,
+"name": &"Shoot2",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_5ra56")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_5qe3u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_hi3ht")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_8fa14")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_02uql")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_7n2ku")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_5slxs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_g18na")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_5h1ex")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_j5bqc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_ga7xc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_hkq4a")
+}],
+"loop": 1,
+"name": &"new_animation",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("26_qqqjb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_tso4d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_6meqq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_ewfxr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_dmbbx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_7bu02")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_ruql2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_khbo7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_s5nt4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_p3vkg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_4otgh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_4h55o")
+}],
+"loop": 1,
+"name": &"new_animation_1",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("38_o8noy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_df63q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_em6id")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_idvmm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_d70sf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_qdvkq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_12gnt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_pugxl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_tjpa5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_jvqfg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_4xvg0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_brubf")
+}],
+"loop": 0,
+"name": &"new_animation_2",
+"speed": 5.0
+}]
+
+[node name="Pistol" type="Node3D" unique_id=373542889]
+script = ExtResource("1_cvufa")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1876754425]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1502333828]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 126.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GunSprite" type="AnimatedSprite2D" parent="CanvasLayer/Control" unique_id=114979047]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_walli")
+animation = &"new_animation_2"
+frame = 10
+frame_progress = 1.0
+
+[node name="GunRays" type="Node3D" parent="." unique_id=282192932]
+
+[node name="RayCast3D" type="RayCast3D" parent="GunRays" unique_id=1125729014]
+target_position = Vector3(0, 0, -20)
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1842195551]
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer2" unique_id=423985085]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer2/CenterContainer" unique_id=1067906239]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("9_dfu4m")
