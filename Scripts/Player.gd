@@ -33,10 +33,12 @@ const FOV_TRANS_SPEED: float = 8.0
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var ceiling_check: RayCast3D = $CeilingCheck
+@onready var raycast = $Head/Camera3D/InteractionRay
 
 var original_capsule_height: float
 var original_shape_y: float
 var original_head_y: float
+var cursor_locked = true
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -45,6 +47,7 @@ func _ready() -> void:
 	original_shape_y = collision_shape.position.y
 	original_head_y = head.position.y
 	
+	camera.current = true
 	# --- Slope & Stair Snapping Settings ---
 	# Keeps the player from flying off ramps when going up/down
 	floor_constant_speed = true 
@@ -137,3 +140,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		rotate_y(-event.relative.x * MOUSE_SENS)
 		head.rotate_x(-event.relative.y * MOUSE_SENS)
 		head.rotation.x = clamp(head.rotation.x, -1.2, 1.2)
+
+func activate():
+	var hit = raycast.get_collider()
+	if cursor_locked and raycast.is_colliding():
+		if hit and hit.has_method("interact"):
+			hit.interact()
+			
