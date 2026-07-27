@@ -50,7 +50,7 @@ text = "LevelOne"
 [node name="Options" type="Button" parent="CenterContainer/MenuButtons" unique_id=504399676]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "LevelTwo"
+text = "TestLevel"
 
 [node name="Credits" type="Button" parent="CenterContainer/MenuButtons" unique_id=437880587]
 layout_mode = 2

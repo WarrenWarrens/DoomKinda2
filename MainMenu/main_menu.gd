@@ -11,7 +11,7 @@ func _on_play_pressed() -> void:
 	get_tree().change_scene_to_file("res://Levels/level3.tscn")
 
 func _on_options_pressed() -> void:
-	get_tree().change_scene_to_file("res://Levels/test2.tscn")
+	get_tree().change_scene_to_file("res://Levels/newtestlevel.tscn")
 
 #func _on_options_pressed() -> void:
 	#$CenterContainer/MenuButtons.visible = false

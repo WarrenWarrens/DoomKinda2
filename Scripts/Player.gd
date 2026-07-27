@@ -1,6 +1,12 @@
 
 extends CharacterBody3D
 
+#Crouch height 3 blocks
+#Player height 2m or 5 blocks
+
+#player height 1.9m or 4 blocks  (8 blocks at 3m)
+#crouch height 3 blocks at 3m
+
 # --- Movement Variables ---
 const WALK_SPEED: float = 7.0
 const SPRINT_SPEED: float = 14.0
@@ -37,6 +43,16 @@ func _ready() -> void:
 	original_capsule_height = collision_shape.shape.height
 	original_shape_y = collision_shape.position.y
 	original_head_y = head.position.y
+	
+	# --- Slope & Stair Snapping Settings ---
+	# Keeps the player from flying off ramps when going up/down
+	floor_constant_speed = true 
+	# Prevents sliding down slopes when you let go of the keys
+	floor_stop_on_slope = true
+	# The max angle the player can walk up (45 degrees is standard)
+	floor_max_angle = deg_to_rad(45.0)
+	# Casts a ray downwards to "snap" the player to the floor, preventing bounces on the way down
+	floor_snap_length = 0.5
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -54,7 +70,7 @@ func _physics_process(delta: float) -> void:
 	var is_crouching = PlayerStats.get_stealth()
 
 	# Lerp Capsule Height and Position (keeps feet on the floor)
-	var target_height = original_capsule_height * 0.5 if is_crouching else original_capsule_height
+	var target_height = original_capsule_height * 0.4 if is_crouching else original_capsule_height
 	var target_shape_y = (original_shape_y - (original_capsule_height * 0.25)) if is_crouching else original_shape_y
 	var target_head_y = (original_head_y - (original_capsule_height * 0.25)) if is_crouching else original_head_y
 	
