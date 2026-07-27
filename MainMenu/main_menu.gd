@@ -8,7 +8,7 @@ func _ready() -> void:
 	$CenterContainer/SettingsMenu/Fullscreen.button_pressed = true if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN else false
 
 func _on_play_pressed() -> void:
-	get_tree().change_scene_to_file("res://Levels/level3.tscn")
+	get_tree().change_scene_to_file("res://Levels/inside.tscn")
 
 func _on_options_pressed() -> void:
 	get_tree().change_scene_to_file("res://Levels/newtestlevel.tscn")

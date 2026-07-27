@@ -45,7 +45,7 @@ theme_override_constants/separation = 20
 [node name="Play" type="Button" parent="CenterContainer/MenuButtons" unique_id=190024920]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "LevelOne"
+text = "Inside"
 
 [node name="Options" type="Button" parent="CenterContainer/MenuButtons" unique_id=504399676]
 layout_mode = 2
