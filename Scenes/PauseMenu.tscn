@@ -1,103 +1,57 @@
 [gd_scene format=3 uid="uid://b0iuaegeuhgbn"]
 
-[ext_resource type="Script" uid="uid://d20cxxs85dbiv" path="res://Scenes/PauseMenu.gd" id="1_qwhev"]
-[ext_resource type="Shader" uid="uid://cth0xi10qjgaj" path="res://Scenes/PauseMenu.gdshader" id="2_5w4ur"]
+[ext_resource type="Script" uid="uid://c8sotuj4bj34" path="res://Scenes/PauseMenu.gd" id="1_qwhev"]
+[ext_resource type="FontFile" uid="uid://e1yckbnmsyen" path="res://Assets/Art/daydream_3/Daydream DEMO.otf" id="2_qwhev"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ttpud"]
-shader = ExtResource("2_5w4ur")
-shader_parameter/lod = 0.0
-
-[sub_resource type="Animation" id="Animation_ey1tb"]
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:material:shader_parameter/lod")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(0, -0.15, 0, 0.15, 0),
-"times": PackedFloat32Array(0)
-}
-
-[sub_resource type="Animation" id="Animation_siy43"]
-resource_name = "blur"
-length = 0.001
-tracks/0/type = "bezier"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:material:shader_parameter/lod")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"handle_modes": PackedInt32Array(0, 2),
-"points": PackedFloat32Array(0, -0.15, 0, 0.15, 0, 0.83300006, -0.050000004, -0.13883336, 0, 0),
-"times": PackedFloat32Array(0, 0.3)
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_yxrls"]
-_data = {
-&"RESET": SubResource("Animation_ey1tb"),
-&"blur": SubResource("Animation_siy43")
-}
-
-[node name="PauseMenu" type="Control" unique_id=1674510112]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+[node name="PauseMenu" type="CanvasLayer" unique_id=619445293]
+process_mode = 3
 script = ExtResource("1_qwhev")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=2078161636]
-material = SubResource("ShaderMaterial_ttpud")
-layout_mode = 0
-offset_left = -584.0
-offset_top = -343.0
-offset_right = 600.0
-offset_bottom = 344.0
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1501823849]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0, 0, 0, 0.6)
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1649016316]
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect" unique_id=995973594]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -250.0
-offset_right = 150.0
-offset_bottom = 250.0
+offset_left = -177.0
+offset_top = -95.0
+offset_right = 177.0
+offset_bottom = 95.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=577617412]
+[node name="ResumeButton" type="Button" parent="ColorRect/VBoxContainer" unique_id=1167016112]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="ResumeButton" type="Button" parent="PanelContainer/VBoxContainer" unique_id=830192394]
-layout_mode = 2
+theme_override_fonts/font = ExtResource("2_qwhev")
+theme_override_font_sizes/font_size = 52
 text = "Resume"
 
-[node name="RestartButton" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1398749324]
+[node name="SettingsButton" type="Button" parent="ColorRect/VBoxContainer" unique_id=1113314885]
 layout_mode = 2
-text = "Restart"
+theme_override_fonts/font = ExtResource("2_qwhev")
+theme_override_font_sizes/font_size = 52
+text = "Settings"
 
-[node name="QuitButton" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1865975507]
+[node name="MainMenuButton" type="Button" parent="ColorRect/VBoxContainer" unique_id=283982040]
 layout_mode = 2
-size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("2_qwhev")
+theme_override_font_sizes/font_size = 52
+text = "MainMenu"
+
+[node name="QuitButton" type="Button" parent="ColorRect/VBoxContainer" unique_id=1207286363]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_qwhev")
+theme_override_font_sizes/font_size = 52
 text = "Quit"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1126044340]
-libraries/ = SubResource("AnimationLibrary_yxrls")
-
-[connection signal="pressed" from="PanelContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="ColorRect/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="ColorRect/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="ColorRect/VBoxContainer/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="ColorRect/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

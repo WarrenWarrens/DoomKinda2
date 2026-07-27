@@ -6,7 +6,7 @@ extends Node3D
 
 var can_attack = PlayerStats.get_action()
 
-const B_STAMINA_COST: float = 10.0
+const B_STAMINA_COST: float = 25.0
 const REGEN_DELAY: float = 1.5
 
 func _ready() -> void:

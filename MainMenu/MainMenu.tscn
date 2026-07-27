@@ -20,6 +20,7 @@ shader_parameter/spin_amount = 0.15
 shader_parameter/pixel_filter = 700.0
 
 [node name="MainMenu" type="Node2D" unique_id=1743697251]
+process_mode = 3
 script = ExtResource("1_otibh")
 
 [node name="Label" type="Label" parent="." unique_id=4425683]

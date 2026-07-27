@@ -187,9 +187,6 @@ collision_mask = 3
 
 [node name="HUD" parent="." unique_id=2074623536 instance=ExtResource("5_2cw1i")]
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=962058341]
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="PauseMenu" parent="ColorRect" unique_id=1674510112 instance=ExtResource("6_eex2w")]
-layout_mode = 1
+[node name="PauseMenu" parent="." unique_id=619445293 instance=ExtResource("6_eex2w")]
+layer = 3
+visible = false

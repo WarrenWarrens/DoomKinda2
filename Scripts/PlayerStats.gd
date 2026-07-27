@@ -12,24 +12,25 @@ var max_armour = 100
 var stamina = 100.0
 var max_stamina = 100.0
 var stamina_regen = 15.0
+var stamina_delay_timer: float = 0.0
+var current_stamina_regen: float = 0.0
+
+
 
 var battlestamina = 100
 var max_battlestamina = 100
 var battlestamina_regen = 15
-
-
-var stamina_delay_timer: float = 0.0
 var b_stamina_delay_timer: float = 0.0
-var current_stamina_regen: float = 0.0
 var current_b_stamina_regen: float = 0.0
+
 
 var action = true
 
 
-var canregen = false
-var regenwait = 2.0
-var r_timer = 0
-var start_r_timer = false
+#var canregen = false
+#var regenwait = 2.0
+#var r_timer = 0
+#var start_r_timer = false
 
 #/////////////////////////////////////////////////////////////
 
