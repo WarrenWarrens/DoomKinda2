@@ -32,6 +32,7 @@ const FOV_TRANS_SPEED: float = 8.0
 @onready var head: Node3D = $Head
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
+@onready var ceiling_check: RayCast3D = $CeilingCheck
 
 var original_capsule_height: float
 var original_shape_y: float
@@ -65,7 +66,11 @@ func _physics_process(delta: float) -> void:
 
 	# --- 1. Crouch Toggle Logic ---
 	if Input.is_action_just_pressed("crouch"):
-		PlayerStats.change_stealth()
+		if PlayerStats.get_stealth():
+			if not ceiling_check.is_colliding():
+				PlayerStats.change_stealth()
+		else:
+			PlayerStats.change_stealth()
 		
 	var is_crouching = PlayerStats.get_stealth()
 

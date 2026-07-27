@@ -18,4 +18,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=1033066276]
 
+[node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D" unique_id=51882858]
+
 [node name="Axe" parent="Head" unique_id=373542889 instance=ExtResource("2_kyqiw")]
+
+[node name="CeilingCheck" type="RayCast3D" parent="." unique_id=962993918]
+target_position = Vector3(0, 2, 0)
