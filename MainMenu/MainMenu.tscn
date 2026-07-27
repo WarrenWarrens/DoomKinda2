@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://d1exggoon56x5"]
 
 [ext_resource type="Script" uid="uid://beygwmb1v12p1" path="res://MainMenu/main_menu.gd" id="1_otibh"]
+[ext_resource type="FontFile" uid="uid://e1yckbnmsyen" path="res://Assets/Art/daydream_3/Daydream DEMO.otf" id="2_b76km"]
 [ext_resource type="Shader" uid="uid://8xbr3tmf6ya2" path="res://MainMenu/main.gdshader" id="2_cruaa"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dfu4m"]
@@ -12,9 +13,9 @@ shader_parameter/polar_repeat = 1.0
 shader_parameter/spin_rotation = 2.0
 shader_parameter/spin_speed = 3.0
 shader_parameter/offset = Vector2(0, 0)
-shader_parameter/colour_1 = Color(0.37402642, 0.47523457, 1, 1)
-shader_parameter/colour_2 = Color(0.9305146, 0.31902453, 0.8016443, 1)
-shader_parameter/colour_3 = Color(1, 0.7934375, 0.7370313, 1)
+shader_parameter/colour_1 = Color(0.708866, 0, 0, 1)
+shader_parameter/colour_2 = Color(7.482662, 4.242929, 0.9696924, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
 shader_parameter/contrast = 2.0
 shader_parameter/spin_amount = 0.15
 shader_parameter/pixel_filter = 700.0
@@ -24,11 +25,12 @@ process_mode = 3
 script = ExtResource("1_otibh")
 
 [node name="Label" type="Label" parent="." unique_id=4425683]
-offset_left = -32.0
-offset_top = -109.0
-offset_right = 1224.0
-offset_bottom = 300.0
-theme_override_font_sizes/font_size = 300
+offset_left = -33.0
+offset_top = -31.0
+offset_right = 1223.0
+offset_bottom = 360.0
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 180
 text = "Goom"
 horizontal_alignment = 1
 
@@ -45,12 +47,12 @@ theme_override_constants/separation = 20
 [node name="Play" type="Button" parent="CenterContainer/MenuButtons" unique_id=190024920]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "Inside"
+text = "TestLevel"
 
 [node name="Options" type="Button" parent="CenterContainer/MenuButtons" unique_id=504399676]
 layout_mode = 2
 theme_override_font_sizes/font_size = 60
-text = "TestLevel"
+text = "InsideLevel"
 
 [node name="Credits" type="Button" parent="CenterContainer/MenuButtons" unique_id=437880587]
 layout_mode = 2
