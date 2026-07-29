@@ -5,9 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://0y8qv4uaew2s" path="res://textures/bf205c89ad779da0946fc7251afffe86-dithered.png" id="3_vkcfp"]
 [ext_resource type="Texture2D" uid="uid://who8ll0g7bej" path="res://textures/83d7c8c4a8810200ff49234d529de628-dithered.png" id="4_x1tdy"]
 [ext_resource type="Texture2D" uid="uid://oivmewvfylp3" path="res://textures/643bc12b21ded30f2a2cb564b6350851-dithered.png" id="6_mbo2a"]
+[ext_resource type="Script" uid="uid://dthyte7wxyyji" path="res://Interactable.gd" id="7_x1tdy"]
 [ext_resource type="Material" uid="uid://mb3dml5w4eni" path="res://textures/32e09f1f33f7ad65594de433be654f3c-dithered.tres" id="9_yneg3"]
-[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://Scenes/HUD.tscn" id="15_ye5je"]
-[ext_resource type="PackedScene" uid="uid://b0iuaegeuhgbn" path="res://Scenes/PauseMenu.tscn" id="16_i5oir"]
 [ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Player.tscn" id="17_ni087"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y7ym2"]
@@ -91,9 +90,6 @@ points = PackedVector3Array(10, 16.5, 45.5, 10, 0, 45.5, -6.5, 16.5, 45.5, -6.5,
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ncwpu"]
 points = PackedVector3Array(9.5, 16, -5.5, 9.5, -1, -5.5, -7, 16, -5.5, -7, -1, -5.5, 9.5, 16, -6.5, 9.5, -1, -6.5, -7, 16, -6.5, -7, -1, -6.5)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_g0itg"]
-points = PackedVector3Array(-2.5, 5.5, -4.5, -2.5, 0.5, -4.5, -5, 5.5, -4.5, -5, 0.5, -4.5, -2.5, 5.5, -5.5, -2.5, 0.5, -5.5, -5, 5.5, -5.5, -5, 0.5, -5.5)
-
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_wwckm"]
 points = PackedVector3Array(-0.5, 6, 5.5, -0.5, -2.5, 5.5, -17, 6, 5.5, -17, -2.5, 5.5, -0.5, 6, 4.5, -0.5, -2.5, 4.5, -17, 6, 4.5, -17, -2.5, 4.5)
 
@@ -133,6 +129,9 @@ points = PackedVector3Array(4.5, 14, 5, 4.5, 6.5, 5, -3.5, 14, 5, -3.5, 6.5, 5, 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_h2ic4"]
 points = PackedVector3Array(-2.4999986, 9, -1.0000002, 1.0000008, 6, 2.4999986, -6.5, 9, -1.0000002, -6.5, 6, 2.4999988, -2.499999, 9, -5.5, 1.0000004, 6, -5.5, -6.5, 9, -5.5, -6.5, 6, -5.5)
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_g0itg"]
+points = PackedVector3Array(-2.5, 5.5, -4.5, -2.5, 0.5, -4.5, -5, 5.5, -4.5, -5, 0.5, -4.5, -2.5, 5.5, -5.5, -2.5, 0.5, -5.5, -5, 5.5, -5.5, -5, 0.5, -5.5)
+
 [node name="Newtestlevel" type="Node3D" unique_id=619748830]
 
 [node name="FuncGodotMap" type="Node3D" parent="." unique_id=1696623913]
@@ -162,9 +161,6 @@ shape = SubResource("ConvexPolygonShape3D_gjyvx")
 
 [node name="entity_0_brush_4_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=738100606]
 shape = SubResource("ConvexPolygonShape3D_ncwpu")
-
-[node name="entity_0_brush_5_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=928137605]
-shape = SubResource("ConvexPolygonShape3D_g0itg")
 
 [node name="entity_0_brush_6_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=1419398563]
 shape = SubResource("ConvexPolygonShape3D_wwckm")
@@ -205,10 +201,12 @@ shape = SubResource("ConvexPolygonShape3D_ni087")
 [node name="entity_0_brush_18_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=424055148]
 shape = SubResource("ConvexPolygonShape3D_h2ic4")
 
-[node name="HUD" parent="." unique_id=2074623536 instance=ExtResource("15_ye5je")]
+[node name="LevelDoor" type="StaticBody3D" parent="FuncGodotMap" unique_id=1042725995]
+script = ExtResource("7_x1tdy")
+next_scene_path = "uid://w4i51c8iv1xs"
 
-[node name="PauseMenu" parent="." unique_id=619445293 instance=ExtResource("16_i5oir")]
-visible = false
+[node name="Door" type="CollisionShape3D" parent="FuncGodotMap/LevelDoor" unique_id=928137605]
+shape = SubResource("ConvexPolygonShape3D_g0itg")
 
 [node name="Player" parent="." unique_id=1157179926 instance=ExtResource("17_ni087")]
 transform = Transform3D(-0.99897856, 0, 0.045186102, 0, 1, 0, -0.045186102, 0, -0.99897856, -5.0903325, 3.1110902, -2.3683)

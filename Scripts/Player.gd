@@ -33,7 +33,8 @@ const FOV_TRANS_SPEED: float = 8.0
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var ceiling_check: RayCast3D = $CeilingCheck
-@onready var raycast = $Head/Camera3D/InteractionRay
+@onready var interact_ray = $Head/Camera3D/InteractionRay
+@onready var interact_prompt: Label = $HUD/CanvasLayer/InteractPrompt
 
 var original_capsule_height: float
 var original_shape_y: float
@@ -96,7 +97,7 @@ func _physics_process(delta: float) -> void:
 	var valid_dodge_dir = input_dir.x != 0 or input_dir.y > 0 
 	
 	# Can't dodge while crouching
-	if Input.is_action_just_pressed("dodge") and not is_dodging and not is_crouching and valid_dodge_dir and PlayerStats.stamina >= DODGE_COST:
+	if Input.is_action_just_pressed("dodge") and not is_dodging and not is_crouching and valid_dodge_dir and PlayerStats.stamina >= DODGE_COST and is_on_floor():
 		is_dodging = true
 		dodge_timer = DODGE_DURATION
 		dodge_direction = direction 
@@ -141,9 +142,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		head.rotate_x(-event.relative.y * MOUSE_SENS)
 		head.rotation.x = clamp(head.rotation.x, -1.2, 1.2)
 
-func activate():
-	var hit = raycast.get_collider()
-	if cursor_locked and raycast.is_colliding():
-		if hit and hit.has_method("interact"):
-			hit.interact()
+
+func _process(_delta: float) -> void:
+	interact_prompt.visible = false
+	if interact_ray.is_colliding():
+		var target = interact_ray.get_collider()
+		if target != null and target.has_method("interact"):
+			interact_prompt.text = "[E] " + target.prompt_message
+			interact_prompt.visible = true
+			if Input.is_action_just_pressed("interact"):
+				target.interact()
+
 			

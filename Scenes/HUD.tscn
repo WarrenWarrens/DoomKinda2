@@ -75,3 +75,17 @@ text = "0"
 z_index = -1
 position = Vector2(575, 351)
 texture = ExtResource("3_8sq4i")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=693964665]
+layer = 10
+
+[node name="InteractPrompt" type="Label" parent="CanvasLayer" unique_id=2108105058]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -103.0
+offset_right = 103.0
+offset_bottom = 28.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_37p78")
+text = "[E] to interact"

@@ -15,8 +15,7 @@
 [ext_resource type="Material" uid="uid://civk33u7cvg2q" path="res://textures/7bde3712c8d16c68f5667ee819edc81a-dithered.tres" id="13_anske"]
 [ext_resource type="Material" uid="uid://up23xvkex8wi" path="res://textures/98bf4240fecafb9715c7b3f53e8472f3-dithered.tres" id="14_u4cas"]
 [ext_resource type="Texture2D" uid="uid://ynvnaxwnqxyb" path="res://textures/955f648e1c8a315dd24c0cc952d59195-dithered.png" id="15_sg1cg"]
-[ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://Scenes/HUD.tscn" id="16_hciju"]
-[ext_resource type="PackedScene" uid="uid://b0iuaegeuhgbn" path="res://Scenes/PauseMenu.tscn" id="17_mpptm"]
+[ext_resource type="Script" uid="uid://dthyte7wxyyji" path="res://Interactable.gd" id="16_13al6"]
 [ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Player.tscn" id="18_gs1kg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ye5je"]
@@ -234,9 +233,6 @@ points = PackedVector3Array(-13.5, 9, 13.5, 21.500002, 0, 13.5, -14, 9, 13.5, -1
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_j66c8"]
 points = PackedVector3Array(34.5, 15, -5.5, 34.5, 0.5, -5.5, 27, 15, -5.5, 27, 0.5, -5.5, 34.5, 15, -43, 34.5, 0.5, -43, 27, 15, -43, 27, 0.5, -43)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_smdig"]
-points = PackedVector3Array(34, 11, -2.5, 34, 0.5, -2.5, 6.5, 11, -2.5, 6.5, 0.5, -2.5, 34, 11, -5.5, 34, 0.5, -5.5, 6.5, 11, -5.5, 6.5, 0.5, -5.5)
-
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ph0kj"]
 points = PackedVector3Array(26.5, 8.5, -5.5, 26.5, 8, -5.5, 6.5, 8.5, -5.5, 6.5, 8, -5.5, 26.5, 8.5, -30, 26.5, 8, -30, 6.5, 8.5, -30, 6.5, 8, -30)
 
@@ -254,6 +250,9 @@ points = PackedVector3Array(3, 0.5, 6.5, -2.4999998, 4.5, 6.5, -2.5, 0.5, 6.5, 3
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_xgqp8"]
 points = PackedVector3Array(-3, 2.5, 6.5, -3, 2, 6.5, -8.5, 2.5, 6.5, -8.5, 2, 6.5, -3, 2.5, 2, -3, 2, 2, -8.5, 2.5, 2, -8.5, 2, 2)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_smdig"]
+points = PackedVector3Array(34, 11, -2.5, 34, 0.5, -2.5, 6.5, 11, -2.5, 6.5, 0.5, -2.5, 34, 11, -5.5, 34, 0.5, -5.5, 6.5, 11, -5.5, 6.5, 0.5, -5.5)
 
 [node name="Newtestlevel" type="Node3D" unique_id=619748830]
 
@@ -289,6 +288,7 @@ shape = SubResource("ConvexPolygonShape3D_5qgib")
 
 [node name="entity_0_brush_6_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=905345175]
 shape = SubResource("ConvexPolygonShape3D_10ro5")
+debug_color = Color(5.7756904e-07, 0.5439435, 0.371377, 0.41960785)
 
 [node name="entity_0_brush_7_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=2039554349]
 shape = SubResource("ConvexPolygonShape3D_gx088")
@@ -320,9 +320,6 @@ shape = SubResource("ConvexPolygonShape3D_aux5g")
 [node name="entity_0_brush_16_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=2099034832]
 shape = SubResource("ConvexPolygonShape3D_j66c8")
 
-[node name="entity_0_brush_17_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=318646806]
-shape = SubResource("ConvexPolygonShape3D_smdig")
-
 [node name="entity_0_brush_18_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=368982792]
 shape = SubResource("ConvexPolygonShape3D_ph0kj")
 
@@ -341,10 +338,12 @@ shape = SubResource("ConvexPolygonShape3D_sc8pn")
 [node name="entity_0_brush_23_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=1260303111]
 shape = SubResource("ConvexPolygonShape3D_xgqp8")
 
-[node name="HUD" parent="." unique_id=2074623536 instance=ExtResource("16_hciju")]
+[node name="LevelDoor" type="StaticBody3D" parent="FuncGodotMap" unique_id=1007413645]
+script = ExtResource("16_13al6")
+next_scene_path = "uid://duswf34ijx8l0"
 
-[node name="PauseMenu" parent="." unique_id=619445293 instance=ExtResource("17_mpptm")]
-visible = false
+[node name="Door" type="CollisionShape3D" parent="FuncGodotMap/LevelDoor" unique_id=318646806]
+shape = SubResource("ConvexPolygonShape3D_smdig")
 
 [node name="Player" parent="." unique_id=1157179926 instance=ExtResource("18_gs1kg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)

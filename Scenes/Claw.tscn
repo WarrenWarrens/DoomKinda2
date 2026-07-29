@@ -21,7 +21,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("4_brw2a")
 }],
-"loop": 0,
+"loop": 1,
 "name": &"Attack",
 "speed": 10.0
 }, {
@@ -54,7 +54,7 @@ grow_vertical = 2
 [node name="WeaponSprite" type="AnimatedSprite2D" parent="CanvasLayer/Control" unique_id=114979047]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_exva3")
-animation = &"Attack"
+animation = &"Idle"
 
 [node name="GunRays" type="Node3D" parent="." unique_id=282192932]
 
