@@ -30,6 +30,8 @@ func _process(delta: float) -> void:
 	# We can attack if we have 0 deficit, OR enough regular stamina to cover 2x the missing amount
 	var can_afford = (deficit == 0) or (available_s >= (deficit * 2.0))
 	
+	
+	
 	if Input.is_action_just_pressed("shoot") and can_attack and can_afford:
 		weapon_sprite.play("Attack")
 		check_hit()
