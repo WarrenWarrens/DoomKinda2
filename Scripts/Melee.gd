@@ -4,6 +4,7 @@ extends Node3D
 @onready var weapon_sprite = $CanvasLayer/Control/WeaponSprite
 @onready var gun_rays = $GunRays.get_children()
 
+
 var can_attack = PlayerStats.get_action()
 
 const B_STAMINA_COST: float = 25.0
@@ -11,6 +12,11 @@ const REGEN_DELAY: float = 1.5
 
 func _ready() -> void:
 	weapon_sprite.play("Idle")
+	PlayerStats.change_action(1)
+	can_attack = true
+
+func _exit_tree() -> void:
+	PlayerStats.change_action(1)
 	
 func check_hit():
 	pass

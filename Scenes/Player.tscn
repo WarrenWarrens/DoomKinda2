@@ -1,9 +1,10 @@
 [gd_scene format=3 uid="uid://ckudr8chj1kgo"]
 
 [ext_resource type="Script" uid="uid://b0gd8hrqpvtbb" path="res://Scripts/Player.gd" id="1_onrkg"]
-[ext_resource type="Script" uid="uid://coq3vktn3p1tr" path="res://Scenes/InteractionRay.gd" id="2_gntrk"]
+[ext_resource type="Script" uid="uid://coq3vktn3p1tr" path="res://Scripts/InteractionRay.gd" id="2_gntrk"]
 [ext_resource type="PackedScene" uid="uid://bdxry7miuj5j7" path="res://Scenes/Axe.tscn" id="2_kyqiw"]
 [ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://Scenes/HUD.tscn" id="4_dewec"]
+[ext_resource type="PackedScene" uid="uid://bqmqhk1fsyhsm" path="res://Scenes/Pistol.tscn" id="4_nn08x"]
 [ext_resource type="PackedScene" uid="uid://b0iuaegeuhgbn" path="res://Scenes/PauseMenu.tscn" id="5_5ixxa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ttpud"]
@@ -26,6 +27,8 @@ target_position = Vector3(0, 0, -3)
 script = ExtResource("2_gntrk")
 
 [node name="Axe" parent="Head" unique_id=373542889 instance=ExtResource("2_kyqiw")]
+
+[node name="Pistol" parent="Head" unique_id=1175262872 instance=ExtResource("4_nn08x")]
 
 [node name="CeilingCheck" type="RayCast3D" parent="." unique_id=962993918]
 target_position = Vector3(0, 2, 0)

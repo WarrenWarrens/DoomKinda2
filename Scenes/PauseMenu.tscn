@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b0iuaegeuhgbn"]
 
-[ext_resource type="Script" uid="uid://c8sotuj4bj34" path="res://Scenes/PauseMenu.gd" id="1_qwhev"]
+[ext_resource type="Script" uid="uid://c8sotuj4bj34" path="res://Scripts/PauseMenu.gd" id="1_qwhev"]
 [ext_resource type="FontFile" uid="uid://e1yckbnmsyen" path="res://Assets/Art/daydream_3/Daydream DEMO.otf" id="2_qwhev"]
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=619445293]

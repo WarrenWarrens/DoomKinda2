@@ -82,7 +82,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("7_40bow")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"Shoot",
 "speed": 10.0
 }, {
@@ -105,7 +105,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("13_d70sf")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"Shoot2",
 "speed": 10.0
 }, {
@@ -253,9 +253,7 @@ grow_vertical = 2
 [node name="GunSprite" type="AnimatedSprite2D" parent="CanvasLayer/Control" unique_id=114979047]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_walli")
-animation = &"new_animation_2"
-frame = 10
-frame_progress = 1.0
+animation = &"Shoot2"
 
 [node name="GunRays" type="Node3D" parent="." unique_id=282192932]
 

@@ -61,7 +61,7 @@ alignment = 2
 [node name="AmmoValue" type="Label" parent="MarginContainer/Stats/Ammo" unique_id=1352461500]
 visible = false
 layout_mode = 2
-text = "999"
+text = "10"
 
 [node name="BattleStaminaValue" type="Label" parent="MarginContainer/Stats/Ammo" unique_id=1078196670]
 layout_mode = 2
@@ -73,7 +73,8 @@ text = "0"
 
 [node name="Overlay" type="Sprite2D" parent="." unique_id=1741101678]
 z_index = -1
-position = Vector2(575, 351)
+position = Vector2(575, 302)
+scale = Vector2(1, 1.1512346)
 texture = ExtResource("3_8sq4i")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=693964665]

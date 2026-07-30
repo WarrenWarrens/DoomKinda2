@@ -35,6 +35,12 @@ const FOV_TRANS_SPEED: float = 8.0
 @onready var ceiling_check: RayCast3D = $CeilingCheck
 @onready var interact_ray = $Head/Camera3D/InteractionRay
 @onready var interact_prompt: Label = $HUD/CanvasLayer/InteractPrompt
+@onready var axe = $Head/Axe
+@onready var pistol = $Head/Pistol
+@onready var weapons = [axe, pistol]
+@onready var ammo_counter = $HUD/MarginContainer/Stats/Ammo/AmmoValue
+
+var current_weapon_index: int = 0
 
 var original_capsule_height: float
 var original_shape_y: float
@@ -47,6 +53,8 @@ func _ready() -> void:
 	original_capsule_height = collision_shape.shape.height
 	original_shape_y = collision_shape.position.y
 	original_head_y = head.position.y
+	
+	equip_weapon(current_weapon_index)
 	
 	camera.current = true
 	# --- Slope & Stair Snapping Settings ---
@@ -152,5 +160,31 @@ func _process(_delta: float) -> void:
 			interact_prompt.visible = true
 			if Input.is_action_just_pressed("interact"):
 				target.interact()
+	if Input.is_action_just_pressed("switch_weapon"):
+		current_weapon_index = (current_weapon_index +1) % weapons.size()
+		equip_weapon(current_weapon_index)
+		
+func equip_weapon(index: int) -> void:
+	for i in range(weapons.size()):
+		if i == index:
+			weapons[i].visible = true
+			weapons[i].set_process(true)
+			weapons[i].set_physics_process(true)
+			
+			if weapons[i].has_node("CanvasLayer"):
+				weapons[i].get_node("CanvasLayer").visible = true
+			
+			if weapons[i].get("is_gun") == true:
+				ammo_counter.visible = true
+			else:
+				ammo_counter.visible = false
+		else:
+			weapons[i].visible = false
+			weapons[i].set_process(false)
+			weapons[i].set_physics_process(false)
+			
+			if weapons[i].has_node("CanvasLayer"):
+				weapons[i].get_node("CanvasLayer").visible = false
+			
 
 			
