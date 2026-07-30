@@ -45,6 +45,7 @@ var endurance = 1
 
 #standing, crouch, prone, stalk, fake, 
 var is_stealth = false
+var is_prone = false
 
 
 #/////////////////////////////////////////////////////////////
@@ -129,15 +130,28 @@ func get_action():
 	
 #/////////////////////////////////////////////////////////////
 
-func change_stealth():
-	if is_stealth == false:
-		is_stealth = true
-	else:
-		is_stealth = false
+#func change_stealth():
+	#if is_stealth == false:
+		#is_stealth = true
+	#else:
+		#is_stealth = false
 		
 func get_stealth():
 	return is_stealth
 
+func change_prone():
+	is_prone = !is_prone
+	if is_prone:
+		is_stealth = false # Cancel crouch if we go prone
+
+# Update your existing change_stealth function to match this:
+func change_stealth():
+	is_stealth = !is_stealth
+	if is_stealth:
+		is_prone = false # Cancel prone if we crouch
+
+func get_prone():
+	return is_prone
 
 func _process(delta: float) -> void:
 	# 1. Regular Stamina Regen

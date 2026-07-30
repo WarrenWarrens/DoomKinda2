@@ -22,6 +22,7 @@ func check_hit():
 func _process(_delta: float) -> void:
 	# Always read the global action state so the kick knows if we are busy
 	can_attack = PlayerStats.get_action()
+	var is_prone = PlayerStats.get_prone() # Read the prone state
 	
 	# --- Desperation Attack Math ---
 	var available_b = PlayerStats.battlestamina
@@ -31,7 +32,7 @@ func _process(_delta: float) -> void:
 	var can_afford = (deficit == 0) or (available_s >= (deficit * 2.0))
 	
 	# We use "kick" instead of "shoot"
-	if Input.is_action_just_pressed("kick") and can_attack and can_afford:
+	if Input.is_action_just_pressed("kick") and can_attack and can_afford and not is_prone:
 		weapon_sprite.play("Kick")
 		check_hit()
 		
