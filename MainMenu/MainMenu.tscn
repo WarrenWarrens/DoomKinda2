@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d1exggoon56x5"]
 
-[ext_resource type="Script" uid="uid://beygwmb1v12p1" path="res://MainMenu/main_menu.gd" id="1_otibh"]
+[ext_resource type="Script" uid="uid://beygwmb1v12p1" path="res://MainMenu/MainMenu.gd" id="1_otibh"]
 [ext_resource type="FontFile" uid="uid://e1yckbnmsyen" path="res://Assets/Art/daydream_3/Daydream DEMO.otf" id="2_b76km"]
 [ext_resource type="Shader" uid="uid://8xbr3tmf6ya2" path="res://MainMenu/main.gdshader" id="2_cruaa"]
 
@@ -9,16 +9,16 @@ shader = ExtResource("2_cruaa")
 shader_parameter/polar_coordinates = false
 shader_parameter/polar_center = Vector2(0.5, 0.5)
 shader_parameter/polar_zoom = 1.4
-shader_parameter/polar_repeat = 1.0
-shader_parameter/spin_rotation = 2.0
-shader_parameter/spin_speed = 3.0
+shader_parameter/polar_repeat = 2.0
+shader_parameter/spin_rotation = 7.0
+shader_parameter/spin_speed = 6.0
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/colour_1 = Color(0.708866, 0, 0, 1)
 shader_parameter/colour_2 = Color(4.0059752, 1.8020818, 0.54918367, 1)
 shader_parameter/colour_3 = Color(0, 0, 0, 1)
 shader_parameter/contrast = 2.0
 shader_parameter/spin_amount = 0.15
-shader_parameter/pixel_filter = 700.0
+shader_parameter/pixel_filter = 400.0
 
 [node name="MainMenu" type="Node2D" unique_id=1743697251]
 process_mode = 3
@@ -46,22 +46,26 @@ theme_override_constants/separation = 20
 
 [node name="Play" type="Button" parent="CenterContainer/MenuButtons" unique_id=190024920]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 40
 text = "TestLevel"
 
 [node name="Options" type="Button" parent="CenterContainer/MenuButtons" unique_id=504399676]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 40
 text = "InsideLevel"
 
 [node name="Credits" type="Button" parent="CenterContainer/MenuButtons" unique_id=437880587]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 40
 text = "Credits"
 
 [node name="Exit" type="Button" parent="CenterContainer/MenuButtons" unique_id=1154746904]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 40
 text = "Exit"
 
 [node name="SettingsMenu" type="VBoxContainer" parent="CenterContainer" unique_id=1286223992]
@@ -102,14 +106,16 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CenterContainer/CreditsMenu" unique_id=1899173943]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 120
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 60
 text = "Ryan Warrener"
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="Button" type="Button" parent="CenterContainer/CreditsMenu" unique_id=401601778]
 layout_mode = 2
-theme_override_font_sizes/font_size = 60
+theme_override_fonts/font = ExtResource("2_b76km")
+theme_override_font_sizes/font_size = 40
 text = "Back"
 
 [node name="Background" type="CanvasLayer" parent="." unique_id=1019917609]
