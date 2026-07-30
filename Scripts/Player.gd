@@ -117,15 +117,20 @@ func _physics_process(delta: float) -> void:
 	var is_prone = PlayerStats.get_prone()
 
 	# --- Capsule Height Lerping ---
-	var target_height = original_capsule_height
+	var standing_height = original_capsule_height
+	var crouch_height = original_capsule_height * (7.0 / 12.0)
+	var prone_height = original_capsule_height * (3.0 / 12.0)
+	var target_height = standing_height
 	var y_offset = 0.0
+	
+	
 
 	if is_prone:
-		target_height = original_capsule_height * 0.2
-		y_offset = original_capsule_height * 0.4
+		target_height = prone_height
+		y_offset = (standing_height - prone_height) / 2.0
 	elif is_crouching:
-		target_height = original_capsule_height * 0.4
-		y_offset = original_capsule_height * 0.25
+		target_height = crouch_height
+		y_offset = (standing_height - crouch_height) / 2.0
 
 	var target_shape_y = original_shape_y - y_offset
 	var target_head_y = original_head_y - y_offset
@@ -133,6 +138,7 @@ func _physics_process(delta: float) -> void:
 	collision_shape.shape.height = lerp(collision_shape.shape.height, target_height, delta * 10.0)
 	collision_shape.position.y = lerp(collision_shape.position.y, target_shape_y, delta * 10.0)
 	head.position.y = lerp(head.position.y, target_head_y, delta * 10.0)
+	
 
 	# --- 3. Dodge Logic ---
 	if is_dodging:

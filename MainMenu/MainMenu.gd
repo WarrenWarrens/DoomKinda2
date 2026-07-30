@@ -8,20 +8,16 @@ func _ready() -> void:
 	$CenterContainer/SettingsMenu/Fullscreen.button_pressed = true if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN else false
 
 func _on_play_pressed() -> void:
-	get_tree().change_scene_to_file("res://Levels/inside.tscn")
+	$CenterContainer/MenuButtons.visible = false
+	$CenterContainer/LevelsMenu.visible = true
 
 func _on_options_pressed() -> void:
-	get_tree().change_scene_to_file("res://Levels/newtestlevel.tscn")
-
-#func _on_options_pressed() -> void:
-	#$CenterContainer/MenuButtons.visible = false
-	#$CenterContainer/SettingsMenu.visible = true
-
+	$CenterContainer/MenuButtons.visible = false
+	$CenterContainer/SettingsMenu.visible = true
 
 func _on_credits_pressed() -> void:
 	$CenterContainer/MenuButtons.visible = false
 	$CenterContainer/CreditsMenu.visible = true
-
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()
@@ -38,3 +34,29 @@ func _on_fullscreen_toggled(toggled_on: bool) -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+
+
+func _on_test_level_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://Levels/testlevel.tscn")
+
+
+func _on_level_one_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://Levels/inside.tscn")
+
+
+func _on_level_two_button_pressed() -> void:
+	#get_tree().change_scene_to_file("res://Levels/LevelTwo.tscn")
+
+	pass # Replace with function body.
+
+
+func _on_level_three_button_pressed() -> void:
+	pass
+	#get_tree().change_scene_to_file("res://Levels/LevelThree.tscn")
+
+
+func _on_back_button_pressed() -> void:
+	$CenterContainer/MenuButtons.visible = true
+	$CenterContainer/SettingsMenu.visible = false
+	$CenterContainer/CreditsMenu.visible = false
+	$CenterContainer/LevelsMenu.visible = false

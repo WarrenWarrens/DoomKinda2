@@ -36,7 +36,7 @@ script = ExtResource("4_bhhdu")
 [node name="Pistol" parent="Head" unique_id=1175262872 instance=ExtResource("4_nn08x")]
 
 [node name="CeilingCheck" type="RayCast3D" parent="." unique_id=962993918]
-target_position = Vector3(0, 2, 0)
+target_position = Vector3(0, 3, 0)
 
 [node name="HUD" parent="." unique_id=2074623536 instance=ExtResource("4_dewec")]
 
