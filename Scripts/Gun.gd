@@ -23,6 +23,8 @@ func make_flash():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	can_shoot = PlayerStats.get_action()
+	
 	if Input.is_action_just_pressed("shoot") and can_shoot and PlayerInventory.ammo_pistol > 0:
 		if left == true:
 			gun_sprite.play("Shoot")

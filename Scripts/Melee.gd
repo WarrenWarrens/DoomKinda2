@@ -22,6 +22,8 @@ func check_hit():
 	pass
 
 func _process(delta: float) -> void:
+	
+	can_attack = PlayerStats.get_action()
 	# --- Desperation Attack Math ---
 	var available_b = PlayerStats.battlestamina
 	var available_s = PlayerStats.stamina
@@ -32,7 +34,7 @@ func _process(delta: float) -> void:
 	
 	
 	
-	if Input.is_action_just_pressed("shoot") and can_attack and can_afford:
+	if Input.is_action_just_pressed("shoot") and can_attack and can_afford and PlayerStats.battlestamina >=10:
 		weapon_sprite.play("Attack")
 		check_hit()
 		

@@ -63,6 +63,7 @@ var pull_up_progress: float = 0.0
 var pull_up_counted: bool = false
 const PULL_UP_COST: float = 20.0
 const PULL_UP_SPEED: float = 1.5
+var ledge_can_climb: bool = false
 
 
 func _ready() -> void:
@@ -90,8 +91,15 @@ func _physics_process(delta: float) -> void:
 		var wants_pull_up = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 		
 		if wants_pull_up and PlayerStats.stamina > 0:
-			pull_up_progress += delta * PULL_UP_SPEED
-			PlayerStats.change_stamina(-PULL_UP_COST * delta * PULL_UP_SPEED)
+			if pull_up_progress < 1.0:
+				pull_up_progress += delta * PULL_UP_SPEED
+				PlayerStats.change_stamina(-PULL_UP_COST * delta * PULL_UP_SPEED)
+			else:
+				PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+				
+				if ledge_can_climb and Input.is_action_just_pressed("up"):
+					vault_over_ledge()
+					return
 		else:
 			pull_up_progress -= delta * PULL_UP_SPEED
 			PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
@@ -119,17 +127,6 @@ func _physics_process(delta: float) -> void:
 		velocity = move_dir * HANG_SPEED
 		move_and_slide()
 		
-		
-		#PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
-		#PlayerStats.stamina_delay_timer = STAMINA_DELAY
-		#
-		#if PlayerStats.stamina <= 0 or Input.is_action_just_pressed("crouch"):
-			#stop_hanging()
-			#return
-		#var move_dir = ledge_axis * input_dir.x
-		
-		#velocity = move_dir * HANG_SPEED
-		#move_and_slide()
 		
 		return
 	
@@ -287,7 +284,7 @@ func _process(_delta: float) -> void:
 				if Input.is_action_just_pressed("interact"):
 					var hit_point = interact_ray.get_collision_point()
 					var hit_normal = interact_ray.get_collision_normal()
-					start_hanging(target.get_ledge_axis(), hit_point, hit_normal)
+					start_hanging(target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
 			elif target.has_method("interact"):
 				interact_prompt.text = "[E] " + target.prompt_message
 				interact_prompt.visible = true
@@ -297,9 +294,10 @@ func _process(_delta: float) -> void:
 		current_weapon_index = (current_weapon_index + 1) % weapons.size()
 		equip_weapon(current_weapon_index)
 
-func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3) -> void:
+func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_climb_flag: bool) -> void:
 	is_hanging = true
 	ledge_axis = axis
+	ledge_can_climb = can_climb_flag
 	
 	PlayerStats.change_action(0)
 	
@@ -344,3 +342,11 @@ func equip_weapon(index: int) -> void:
 			
 
 			
+func vault_over_ledge() -> void:
+	var forward_dir = -transform.basis.z 
+   
+	global_position += Vector3(0, original_capsule_height * 0.9, 0) + (forward_dir * 1.2)
+	
+	stop_hanging()
+	pull_up_progress = 0.0
+	head.position.y = original_head_y
