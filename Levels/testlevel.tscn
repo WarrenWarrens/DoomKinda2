@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://dthyte7wxyyji" path="res://Interactable.gd" id="16_13al6"]
 [ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Levels/Ledge.gd" id="17_nxtag"]
 [ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Player.tscn" id="18_gs1kg"]
+[ext_resource type="Script" uid="uid://cbve1v0dvw6cp" path="res://Levels/Ladder.gd" id="18_rbetd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ye5je"]
 albedo_texture = ExtResource("15_sg1cg")
@@ -231,9 +232,6 @@ points = PackedVector3Array(34.5, 15, -5.5, 34.5, 0.5, -5.5, 27, 15, -5.5, 27, 0
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ph0kj"]
 points = PackedVector3Array(26.5, 8.5, -5.5, 26.5, 8, -5.5, 6.5, 8.5, -5.5, 6.5, 8, -5.5, 26.5, 8.5, -30, 26.5, 8, -30, 6.5, 8.5, -30, 6.5, 8, -30)
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_yhfht"]
-points = PackedVector3Array(14.5, 9, -26.5, 14.5, 0.5, -26.5, 7, 9, -26.5, 7, 0.5, -26.5, 14.5, 9, -30, 14.5, 0.5, -30, 7, 9, -30, 7, 0.5, -30)
-
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_j3d4m"]
 points = PackedVector3Array(17, 8, -6, 17, 0.5, -6, 10.5, 8, -6, 10.5, 0.5, -6, 17, 8, -17, 17, 0.5, -17, 10.5, 8, -17, 10.5, 0.5, -17)
 
@@ -254,6 +252,9 @@ points = PackedVector3Array(-3, 5.5, -21.5, -3, 5, -21.5, -8, 5.5, -21.5, -8, 5,
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_vtura"]
 points = PackedVector3Array(-3, 6, -26, -3, 5.5, -26, -8, 6, -26, -8, 5.5, -26, -3, 6, -35.5, -3, 5.5, -35.5, -8, 6, -35.5, -8, 5.5, -35.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_yhfht"]
+points = PackedVector3Array(14.5, 9, -26.5, 14.5, 0.5, -26.5, 7, 9, -26.5, 7, 0.5, -26.5, 14.5, 9, -30, 14.5, 0.5, -30, 7, 9, -30, 7, 0.5, -30)
 
 [node name="Newtestlevel" type="Node3D" unique_id=619748830]
 
@@ -318,9 +319,6 @@ shape = SubResource("ConvexPolygonShape3D_j66c8")
 [node name="entity_0_brush_18_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=368982792]
 shape = SubResource("ConvexPolygonShape3D_ph0kj")
 
-[node name="entity_0_brush_19_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=91146609]
-shape = SubResource("ConvexPolygonShape3D_yhfht")
-
 [node name="entity_0_brush_20_collision_shape" type="CollisionShape3D" parent="FuncGodotMap/entity_0_worldspawn" unique_id=1564789285]
 shape = SubResource("ConvexPolygonShape3D_j3d4m")
 
@@ -351,6 +349,12 @@ script = ExtResource("17_nxtag")
 
 [node name="LedgeTwo" type="CollisionShape3D" parent="FuncGodotMap/LedgeLedgeTwo" unique_id=1893394220]
 shape = SubResource("ConvexPolygonShape3D_vtura")
+
+[node name="Ladder" type="StaticBody3D" parent="FuncGodotMap" unique_id=1428449202]
+script = ExtResource("18_rbetd")
+
+[node name="LadderOne" type="CollisionShape3D" parent="FuncGodotMap/Ladder" unique_id=91146609]
+shape = SubResource("ConvexPolygonShape3D_yhfht")
 
 [node name="Player" parent="." unique_id=1157179926 instance=ExtResource("18_gs1kg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)

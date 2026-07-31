@@ -65,6 +65,13 @@ const PULL_UP_COST: float = 20.0
 const PULL_UP_SPEED: float = 1.5
 var ledge_can_climb: bool = false
 
+#Ladder
+var is_on_ladder: bool = false
+var ladder_normal: Vector3 = Vector3.ZERO
+const LADDER_SPEED: float = 4.0
+const LADDER_DRAIN_RATE: float = 4.0
+
+
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -98,7 +105,7 @@ func _physics_process(delta: float) -> void:
 				PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
 				
 				if ledge_can_climb and Input.is_action_just_pressed("up"):
-					vault_over_ledge()
+					vault_over_obstacle()
 					return
 		else:
 			pull_up_progress -= delta * PULL_UP_SPEED
@@ -129,6 +136,39 @@ func _physics_process(delta: float) -> void:
 		
 		
 		return
+		
+	# --- LADDER STATE OVERRIDE ---
+	if is_on_ladder:
+		PlayerStats.change_stamina(-LADDER_DRAIN_RATE * delta)
+		PlayerStats.stamina_delay_timer = STAMINA_DELAY
+		
+		# Drop if out of stamina or pressing crouch
+		if PlayerStats.stamina <= 0 or Input.is_action_just_pressed("crouch"):
+			stop_ladder()
+			return
+			
+		var input_dir := Input.get_vector("left", "right", "up", "down")
+		
+		# Move Left/Right locally, and Up/Down globally
+		# (Input 'up' returns -y, so multiplying by -1 makes W go UP)
+		var move_dir = (transform.basis.x * input_dir.x) + (Vector3.UP * -input_dir.y)
+		
+		velocity = move_dir * LADDER_SPEED
+		move_and_slide()
+		
+		# --- Auto-Vault Check (Code-based RayCast) ---
+		if velocity.y > 0: # Only check if we are moving UP
+			var space_state = get_world_3d().direct_space_state
+			# Shoot an invisible laser from our chest, straight forward into the ladder
+			var query = PhysicsRayQueryParameters3D.create(global_position, global_position - ladder_normal * 0.8)
+			var result = space_state.intersect_ray(query)
+			
+			# If the laser hits nothing, our chest has cleared the top of the ladder!
+			if result.is_empty():
+				vault_over_obstacle()
+				
+		return # Skip normal gravity and walking
+	# --- END LADDER OVERRIDE ---
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -290,6 +330,13 @@ func _process(_delta: float) -> void:
 				interact_prompt.visible = true
 				if Input.is_action_just_pressed("interact"):
 					target.interact()
+			elif target.has_method("get_is_ladder") and not is_on_ladder and not is_hanging:
+				interact_prompt.text = "[E] " + target.prompt_message
+				interact_prompt.visible = true
+				if Input.is_action_just_pressed("interact"):
+					var hit_normal = interact_ray.get_collision_normal()
+					start_ladder(hit_normal)
+					
 	if Input.is_action_just_pressed("switch_weapon") and not is_hanging:
 		current_weapon_index = (current_weapon_index + 1) % weapons.size()
 		equip_weapon(current_weapon_index)
@@ -342,11 +389,32 @@ func equip_weapon(index: int) -> void:
 			
 
 			
-func vault_over_ledge() -> void:
+func vault_over_obstacle() -> void:
 	var forward_dir = -transform.basis.z 
    
 	global_position += Vector3(0, original_capsule_height * 0.9, 0) + (forward_dir * 1.2)
 	
 	stop_hanging()
+	stop_ladder()
+	
 	pull_up_progress = 0.0
 	head.position.y = original_head_y
+
+func start_ladder(hit_normal: Vector3) -> void:
+	is_on_ladder = true
+	ladder_normal = hit_normal
+	PlayerStats.change_action(0) 
+	
+	if PlayerStats.get_stealth(): PlayerStats.change_stealth()
+	if PlayerStats.get_prone(): PlayerStats.change_prone()
+	is_sliding = false
+	is_dodging = false
+
+	var look_target = global_position - ladder_normal
+	look_target.y = global_position.y
+	look_at(look_target, Vector3.UP)
+	head.rotation.x = 0
+
+func stop_ladder() -> void:
+	is_on_ladder = false
+	PlayerStats.change_action(1)
