@@ -53,6 +53,13 @@ var original_shape_y: float
 var original_head_y: float
 var cursor_locked = true
 
+#Hanging Variables
+var is_hanging: bool = false
+var ledge_axis: Vector3 = Vector3.ZERO
+const HANG_SPEED: float = 3.0
+const HANG_DRAIN_RATE: float = 10.0
+
+
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	# Save our standing dimensions so we can lerp back to them
@@ -74,6 +81,21 @@ func _ready() -> void:
 	floor_snap_length = 0.5
 
 func _physics_process(delta: float) -> void:
+	if is_hanging:
+		PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+		PlayerStats.stamina_delay_timer = STAMINA_DELAY
+		
+		if PlayerStats.stamina <= 0 or Input.is_action_just_pressed("crouch"):
+			stop_hanging()
+			return
+		var input_dir := Input.get_vector("left", "right", "up", "down")
+		var move_dir = ledge_axis * input_dir.x
+		
+		velocity = move_dir * HANG_SPEED
+		move_and_slide()
+		
+		return
+	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
@@ -206,115 +228,6 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-#func _physics_process(delta: float) -> void:
-	#if not is_on_floor():
-		#velocity += get_gravity() * delta
-#
-	#var input_dir := Input.get_vector("left", "right", "up", "down")
-	#var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	#var is_moving = direction.length() > 0
-	#
-	## 1. Determine if we are actively holding sprint
-	#var is_sprinting = false
-	#if Input.is_action_pressed("sprint") and is_moving and not PlayerStats.get_stealth() and PlayerStats.stamina > 0:
-		#is_sprinting = true
-#
-	## --- 2. Crouch & Slide Trigger Logic ---
-	#if Input.is_action_just_pressed("crouch"):
-		#if PlayerStats.get_stealth():
-			## Trying to stand up
-			#if not ceiling_check.is_colliding():
-				#PlayerStats.change_stealth()
-				#is_sliding = false # Cancel slide if we stand up
-		#else:
-			## Trying to crouch
-			#PlayerStats.change_stealth()
-			## Trigger slide ONLY if we were sprinting when we crouched!
-			#if is_sprinting and is_on_floor():
-				#is_sliding = true
-#
-	#var is_crouching = PlayerStats.get_stealth()
-#
-	## Lerp Capsule Height (keep your existing lerp code here)
-	#var target_height = original_capsule_height * 0.4 if is_crouching else original_capsule_height
-	#var target_shape_y = (original_shape_y - (original_capsule_height * 0.25)) if is_crouching else original_shape_y
-	#var target_head_y = (original_head_y - (original_capsule_height * 0.25)) if is_crouching else original_head_y
-	#
-	#collision_shape.shape.height = lerp(collision_shape.shape.height, target_height, delta * 10.0)
-	#collision_shape.position.y = lerp(collision_shape.position.y, target_shape_y, delta * 10.0)
-	#head.position.y = lerp(head.position.y, target_head_y, delta * 10.0)
-#
-	## --- 3. Dodge Logic (Keep your existing code) ---
-	#if is_dodging:
-		#dodge_timer -= delta
-		#if dodge_timer <= 0:
-			#is_dodging = false
-#
-	#var valid_dodge_dir = input_dir.x != 0 or input_dir.y > 0 
-	#if Input.is_action_just_pressed("dodge") and not is_dodging and not is_crouching and valid_dodge_dir and PlayerStats.stamina >= DODGE_COST:
-		#is_dodging = true
-		#dodge_timer = DODGE_DURATION
-		#dodge_direction = direction 
-		#PlayerStats.change_stamina(-DODGE_COST)
-		#PlayerStats.stamina_delay_timer = STAMINA_DELAY 
-#
-	## --- 4. Sprint & Stamina Drain ---
-	## We naturally stop draining stamina while sliding because is_sprinting becomes false when crouched!
-	#if not is_dodging and not is_sliding:
-		#if is_sprinting:
-			#PlayerStats.change_stamina(-drain_rate * delta)
-			#PlayerStats.stamina_delay_timer = STAMINA_DELAY 
-#
-	## --- 5. Dynamic FOV ---
-	## Target sprint FOV if sprinting OR sliding
-	#var target_fov = SPRINT_FOV if (is_sprinting or is_sliding) else BASE_FOV
-	#camera.fov = lerp(camera.fov, target_fov, delta * FOV_TRANS_SPEED)
-#
-	## --- 6. Apply Movement Speed ---
-	#if is_dodging:
-		#velocity.x = dodge_direction.x * DODGE_SPEED
-		#velocity.z = dodge_direction.z * DODGE_SPEED
-		#
-	#elif is_sliding:
-		#var floor_normal = get_floor_normal()
-		## This math extracts exactly how sloped the ground is
-		#var downhill = Vector3.DOWN.slide(floor_normal).normalized()
-		#var slope_vector = Vector2(downhill.x, downhill.z)
-		#
-		#if slope_vector.length() > 0.1: 
-			## We are on a slope! Add momentum downhill
-			#velocity.x += downhill.x * SLOPE_BOOST * delta
-			#velocity.z += downhill.z * SLOPE_BOOST * delta
-		#else: 
-			## Flat ground! Apply friction to slow down over time
-			#velocity.x = move_toward(velocity.x, 0, SLIDE_FRICTION * delta)
-			#velocity.z = move_toward(velocity.z, 0, SLIDE_FRICTION * delta)
-			#
-		## Allow slight steering left/right while sliding (optional but feels amazing)
-		#if direction:
-			#velocity.x += direction.x * 3.0 * delta
-			#velocity.z += direction.z * 3.0 * delta
-			#
-		## End the slide automatically if we slow down to crouch speed
-		#var current_horiz_speed = Vector2(velocity.x, velocity.z).length()
-		#if current_horiz_speed <= CROUCH_SPEED:
-			#is_sliding = false
-			#
-	#else:
-		## Normal walking/sprinting/crouching logic
-		#var current_speed = WALK_SPEED
-		#if is_sprinting: current_speed = SPRINT_SPEED
-		#elif is_crouching: current_speed = CROUCH_SPEED
-		#
-		#if direction:
-			#velocity.x = direction.x * current_speed
-			#velocity.z = direction.z * current_speed
-		#else:
-			#velocity.x = move_toward(velocity.x, 0, current_speed)
-			#velocity.z = move_toward(velocity.z, 0, current_speed)
-#
-	#move_and_slide()
-	
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -325,17 +238,51 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	interact_prompt.visible = false
+	
 	if interact_ray.is_colliding():
 		var target = interact_ray.get_collider()
-		if target != null and target.has_method("interact"):
-			interact_prompt.text = "[E] " + target.prompt_message
-			interact_prompt.visible = true
-			if Input.is_action_just_pressed("interact"):
-				target.interact()
-	if Input.is_action_just_pressed("switch_weapon"):
-		current_weapon_index = (current_weapon_index +1) % weapons.size()
-		equip_weapon(current_weapon_index)
 		
+		if target != null:
+			if target.has_method("get_ledge_axis") and not is_hanging:
+				interact_prompt.text = "[E] " + target.prompt_message
+				interact_prompt.visible = true
+				
+				if Input.is_action_just_pressed("interact"):
+					var hit_point = interact_ray.get_collision_point()
+					var hit_normal = interact_ray.get_collision_normal()
+					start_hanging(target.get_ledge_axis(), hit_point, hit_normal)
+			elif target.has_method("interact"):
+				interact_prompt.text = "[E] " + target.prompt_message
+				interact_prompt.visible = true
+				if Input.is_action_just_pressed("interact"):
+					target.interact()
+	if Input.is_action_just_pressed("switch_weapon") and not is_hanging:
+		current_weapon_index = (current_weapon_index + 1) % weapons.size()
+		equip_weapon(current_weapon_index)
+
+func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3) -> void:
+	is_hanging = true
+	ledge_axis = axis
+	
+	PlayerStats.change_action(0)
+	
+	if PlayerStats.get_stealth(): PlayerStats.change_stealth()
+	if PlayerStats.get_prone(): PlayerStats.change_prone()
+	is_sliding = false
+	is_dodging = false
+	
+	global_position = hit_point + (hit_normal * 0.5) - Vector3(0, original_capsule_height * 0.35, 0)
+
+	var look_target = global_position - hit_normal
+	look_target.y = global_position.y
+	look_at(look_target, Vector3.UP)
+	head.rotation.x = 0
+	
+func stop_hanging() -> void:
+	is_hanging = false
+	PlayerStats.change_action(1)
+
+
 func equip_weapon(index: int) -> void:
 	for i in range(weapons.size()):
 		if i == index:
