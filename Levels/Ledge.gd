@@ -1,7 +1,7 @@
 extends StaticBody3D
 
 @export var prompt_message: String = "Hang from Ledge"
-@export var is_x_axis_ledge: bool = true
+@export var is_x_axis_ledge: bool = false
 
 func get_ledge_axis() -> Vector3:
 	if is_x_axis_ledge:

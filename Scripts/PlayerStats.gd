@@ -174,3 +174,8 @@ func _process(delta: float) -> void:
 		current_b_stamina_regen = lerp(current_b_stamina_regen, battlestamina_regen * stealth_mult, delta * 2.0)
 		change_battlestamina(current_b_stamina_regen * delta)
 		
+var total_pull_ups = 0
+
+func add_pull_up():
+	total_pull_ups += 1
+	print("Pull ups completed: ", total_pull_ups)

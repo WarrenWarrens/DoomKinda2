@@ -59,6 +59,11 @@ var ledge_axis: Vector3 = Vector3.ZERO
 const HANG_SPEED: float = 3.0
 const HANG_DRAIN_RATE: float = 10.0
 
+var pull_up_progress: float = 0.0
+var pull_up_counted: bool = false
+const PULL_UP_COST: float = 20.0
+const PULL_UP_SPEED: float = 1.5
+
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -82,17 +87,49 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_hanging:
-		PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+		var wants_pull_up = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+		
+		if wants_pull_up and PlayerStats.stamina > 0:
+			pull_up_progress += delta * PULL_UP_SPEED
+			PlayerStats.change_stamina(-PULL_UP_COST * delta * PULL_UP_SPEED)
+		else:
+			pull_up_progress -= delta * PULL_UP_SPEED
+			PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+			
 		PlayerStats.stamina_delay_timer = STAMINA_DELAY
+		
+		pull_up_progress = clamp(pull_up_progress, 0.0, 1.0)
+		
+		if pull_up_progress == 1.0 and not pull_up_counted:
+			PlayerStats.add_pull_up()
+			pull_up_counted = true
+		elif pull_up_progress < 0.1:
+			pull_up_counted = false
+		
+		var target_hang_head_y = original_head_y + (pull_up_progress * (original_capsule_height * 0.35))
+		head.position.y = target_hang_head_y
 		
 		if PlayerStats.stamina <= 0 or Input.is_action_just_pressed("crouch"):
 			stop_hanging()
+			pull_up_progress = 0.0
 			return
-		var input_dir := Input.get_vector("left", "right", "up", "down")
-		var move_dir = ledge_axis * input_dir.x
 		
+		var input_dir := Input.get_vector("left", "right", "up", "down")
+		var move_dir = transform.basis.x * input_dir.x
 		velocity = move_dir * HANG_SPEED
 		move_and_slide()
+		
+		
+		#PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+		#PlayerStats.stamina_delay_timer = STAMINA_DELAY
+		#
+		#if PlayerStats.stamina <= 0 or Input.is_action_just_pressed("crouch"):
+			#stop_hanging()
+			#return
+		#var move_dir = ledge_axis * input_dir.x
+		
+		#velocity = move_dir * HANG_SPEED
+		#move_and_slide()
 		
 		return
 	
