@@ -7,5 +7,9 @@
 script = ExtResource("1_ftd2v")
 script_class = ExtResource("2_uhwel")
 classname = "func_ledge"
+class_properties = Dictionary[String, Variant]({
+"can_climb": true,
+"is_x_axis_ledge": true
+})
 node_class = "StaticBody3D"
 metadata/_custom_type_script = "uid://5cow84q03m6a"

@@ -9,9 +9,10 @@
 [ext_resource type="Resource" uid="uid://bcdsueg5pysfq" path="res://addons/func_godot/fgd/cull_interior_faces.tres" id="3_h5cmk"]
 [ext_resource type="Resource" uid="uid://dg5x44cc7flew" path="res://addons/func_godot/fgd/func_illusionary.tres" id="4_c4ucw"]
 [ext_resource type="Resource" uid="uid://ch3e0dix85uhb" path="res://addons/func_godot/fgd/func_detail_illusionary.tres" id="5_b2q3p"]
+[ext_resource type="Resource" uid="uid://bbb67w0w7qpfd" path="res://FGD/func_ladder.tres" id="6_7vn57"]
 [ext_resource type="Resource" uid="uid://n1auajkmpctx" path="res://FGD/func_ledge.tres" id="9_a2pra"]
 [ext_resource type="Resource" uid="uid://c46c5vr65andk" path="res://FGD/func_door.tres" id="10_7vn57"]
 
 [resource]
 script = ExtResource("1_axt3h")
-entity_definitions = Array[Resource]([ExtResource("1_ehab8"), ExtResource("2_7jebp"), ExtResource("3_h5cmk"), ExtResource("2_ri2rx"), ExtResource("3_7jigp"), ExtResource("3_fqfww"), ExtResource("5_b2q3p"), ExtResource("4_c4ucw"), ExtResource("9_a2pra"), ExtResource("10_7vn57")])
+entity_definitions = Array[Resource]([ExtResource("1_ehab8"), ExtResource("2_7jebp"), ExtResource("3_h5cmk"), ExtResource("9_a2pra"), ExtResource("10_7vn57"), ExtResource("6_7vn57"), ExtResource("2_ri2rx"), ExtResource("3_7jigp"), ExtResource("3_fqfww"), ExtResource("5_b2q3p"), ExtResource("4_c4ucw")])
