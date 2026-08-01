@@ -9,9 +9,9 @@ var max_health = 200
 var armour = 25
 var max_armour = 100
 
-var stamina = 100.0
-var max_stamina = 100.0
-var stamina_regen = 15.0
+var stamina = 1000.0
+var max_stamina = 1000.0
+var stamina_regen = 150.0
 var stamina_delay_timer: float = 0.0
 var current_stamina_regen: float = 0.0
 

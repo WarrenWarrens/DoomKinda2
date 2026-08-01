@@ -1,9 +1,12 @@
 [gd_scene format=4 uid="uid://w4i51c8iv1xs"]
 
 [ext_resource type="Script" uid="uid://cwu5cf7a0awcd" path="res://addons/func_godot/src/map/func_godot_map.gd" id="1_2ekrt"]
-[ext_resource type="Resource" uid="uid://bkhxcqsquw1yg" path="res://addons/func_godot/func_godot_default_map_settings.tres" id="2_2sfqi"]
+[ext_resource type="Material" uid="uid://cvex6toty8yn7" path="res://addons/func_godot/textures/default_material.tres" id="2_o3mw3"]
 [ext_resource type="Material" uid="uid://mny5amgqx737" path="res://textures/518ad05a9668e0b16717b256acf369b7-dithered.tres" id="3_dqiem"]
+[ext_resource type="Resource" uid="uid://crgpdahjaj" path="res://addons/func_godot/fgd/func_godot_fgd.tres" id="3_jsmkn"]
 [ext_resource type="Material" uid="uid://brg4bnwvlp2wh" path="res://textures/str_metalflr3.tres" id="4_i3er8"]
+[ext_resource type="Script" uid="uid://38q6k0ctahjn" path="res://addons/func_godot/src/map/func_godot_map_settings.gd" id="4_jgkt2"]
+[ext_resource type="Script" uid="uid://cij36hpqc46c" path="res://addons/func_godot/src/import/quake_wad_file.gd" id="5_l2oo2"]
 [ext_resource type="Material" uid="uid://cgbxslyvjya4j" path="res://textures/str_bloodvein8.tres" id="5_swaiv"]
 [ext_resource type="Material" uid="uid://ddjftgg0gf5yb" path="res://textures/4476ac1569907203ccc85146418efef6-dithered.tres" id="6_1qwce"]
 [ext_resource type="Material" uid="uid://b3wj8ubnuwwyb" path="res://textures/2a331889001ee784e42000523639330e-dithered.tres" id="7_7hgbd"]
@@ -19,6 +22,10 @@
 [ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Levels/Ledge.gd" id="17_nxtag"]
 [ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Player.tscn" id="18_gs1kg"]
 [ext_resource type="Script" uid="uid://cbve1v0dvw6cp" path="res://Levels/Ladder.gd" id="18_rbetd"]
+
+[sub_resource type="Resource" id="Resource_lwen8"]
+script = ExtResource("4_jgkt2")
+metadata/_custom_type_script = "uid://38q6k0ctahjn"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ye5je"]
 albedo_texture = ExtResource("15_sg1cg")
@@ -261,7 +268,7 @@ points = PackedVector3Array(14.5, 9, -26.5, 14.5, 0.5, -26.5, 7, 9, -26.5, 7, 0.
 [node name="FuncGodotMap" type="Node3D" parent="." unique_id=1696623913]
 script = ExtResource("1_2ekrt")
 local_map_file = "uid://dotk0aq5674d7"
-map_settings = ExtResource("2_2sfqi")
+map_settings = SubResource("Resource_lwen8")
 metadata/_custom_type_script = "uid://cwu5cf7a0awcd"
 
 [node name="entity_0_worldspawn" type="StaticBody3D" parent="FuncGodotMap" unique_id=1606265558]

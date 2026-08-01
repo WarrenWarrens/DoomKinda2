@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcmwar3r43lmy"
-path.s3tc="res://.godot/imported/str_blood_large.png-dce8201626f63640764fe5ad85e99f81.s3tc.ctex"
+uid="uid://7u4dvj4ea3eq"
+path.s3tc="res://.godot/imported/p1.png-ba2040f2c830563289aeabd8840b45bc.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/str_blood_large.png"
-dest_files=["res://.godot/imported/str_blood_large.png-dce8201626f63640764fe5ad85e99f81.s3tc.ctex"]
+source_file="res://textures/p1.png"
+dest_files=["res://.godot/imported/p1.png-ba2040f2c830563289aeabd8840b45bc.s3tc.ctex"]
 
 [params]
 

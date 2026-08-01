@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDSolidClass" format=3 uid="uid://n1auajkmpctx"]
+
+[ext_resource type="Script" uid="uid://5cow84q03m6a" path="res://addons/func_godot/src/fgd/func_godot_fgd_solid_class.gd" id="1_ftd2v"]
+[ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Levels/Ledge.gd" id="2_uhwel"]
+
+[resource]
+script = ExtResource("1_ftd2v")
+script_class = ExtResource("2_uhwel")
+classname = "func_ledge"
+node_class = "StaticBody3D"
+metadata/_custom_type_script = "uid://5cow84q03m6a"
