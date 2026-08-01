@@ -70,7 +70,7 @@ var is_on_ladder: bool = false
 var ladder_normal: Vector3 = Vector3.ZERO
 const LADDER_SPEED: float = 4.0
 const LADDER_DRAIN_RATE: float = 4.0
-
+const TRAVERSE_COST: float = 15.0
 
 
 func _ready() -> void:
@@ -139,6 +139,17 @@ func _physics_process(delta: float) -> void:
 		
 	# --- LADDER STATE OVERRIDE ---
 	if is_on_ladder:
+		# Check if we want to fast-slide down
+		if Input.is_action_pressed("sprint"):
+			# Move straight down at double speed with ZERO stamina drain
+			velocity = Vector3.DOWN * (LADDER_SPEED * 2.0)
+			move_and_slide()
+			
+			# Automatically let go if we hit the floor while sliding!
+			if is_on_floor():
+				stop_ladder()
+			return
+			
 		PlayerStats.change_stamina(-LADDER_DRAIN_RATE * delta)
 		PlayerStats.stamina_delay_timer = STAMINA_DELAY
 		
@@ -311,35 +322,71 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
+	# 1. Default state: hide the prompt
 	interact_prompt.visible = false
 	
+	# 2. Raycast Interaction Logic
 	if interact_ray.is_colliding():
 		var target = interact_ray.get_collider()
 		
 		if target != null:
-			if target.has_method("get_ledge_axis") and not is_hanging:
-				interact_prompt.text = "[E] " + target.prompt_message
+			# --- Ledge Logic ---
+			if target.has_method("get_ledge_axis"):
+				var is_traversing = is_hanging or is_on_ladder
+				
+				# Change the UI prompt if we are already hanging/climbing
+				interact_prompt.text = "[E] Leap to Ledge" if is_traversing else "[E] " + target.prompt_message
 				interact_prompt.visible = true
 				
 				if Input.is_action_just_pressed("interact"):
 					var hit_point = interact_ray.get_collision_point()
 					var hit_normal = interact_ray.get_collision_normal()
-					start_hanging(target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
-			elif target.has_method("interact"):
+					
+					if is_traversing:
+						# Only allow the leap if we have enough stamina
+						if PlayerStats.stamina >= TRAVERSE_COST:
+							PlayerStats.change_stamina(-TRAVERSE_COST)
+							PlayerStats.stamina_delay_timer = STAMINA_DELAY
+							# Clean up old states before jumping
+							is_hanging = false 
+							is_on_ladder = false
+							start_hanging(target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
+					else:
+						start_hanging(target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
+						
+			# --- Ladder Logic ---
+			elif target.has_method("get_is_ladder"):
+				var is_traversing = is_hanging or is_on_ladder
+				
+				interact_prompt.text = "[E] Leap to Ladder" if is_traversing else "[E] " + target.prompt_message
+				interact_prompt.visible = true
+				
+				if Input.is_action_just_pressed("interact"):
+					var hit_point = interact_ray.get_collision_point()
+					var hit_normal = interact_ray.get_collision_normal()
+					
+					if is_traversing:
+						if PlayerStats.stamina >= TRAVERSE_COST:
+							PlayerStats.change_stamina(-TRAVERSE_COST)
+							PlayerStats.stamina_delay_timer = STAMINA_DELAY
+							is_hanging = false
+							is_on_ladder = false
+							start_ladder(hit_normal, hit_point)
+					else:
+						start_ladder(hit_normal, hit_point)
+
+			# --- Door / Object Logic ---
+			elif target.has_method("interact") and not is_hanging and not is_on_ladder:
 				interact_prompt.text = "[E] " + target.prompt_message
 				interact_prompt.visible = true
 				if Input.is_action_just_pressed("interact"):
 					target.interact()
-			elif target.has_method("get_is_ladder") and not is_on_ladder and not is_hanging:
-				interact_prompt.text = "[E] " + target.prompt_message
-				interact_prompt.visible = true
-				if Input.is_action_just_pressed("interact"):
-					var hit_normal = interact_ray.get_collision_normal()
-					start_ladder(hit_normal)
 					
-	if Input.is_action_just_pressed("switch_weapon") and not is_hanging:
+	# 3. Weapon Switching Logic
+	# Added "and not is_on_ladder" so weapons stay locked while climbing!
+	if Input.is_action_just_pressed("switch_weapon") and not is_hanging and not is_on_ladder:
 		current_weapon_index = (current_weapon_index + 1) % weapons.size()
-		equip_weapon(current_weapon_index)
+		equip_weapon(current_weapon_index)	
 
 func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_climb_flag: bool) -> void:
 	is_hanging = true
@@ -400,7 +447,8 @@ func vault_over_obstacle() -> void:
 	pull_up_progress = 0.0
 	head.position.y = original_head_y
 
-func start_ladder(hit_normal: Vector3) -> void:
+func start_ladder(hit_normal: Vector3, hit_point: Vector3) -> void:
+	
 	is_on_ladder = true
 	ladder_normal = hit_normal
 	PlayerStats.change_action(0) 
@@ -410,10 +458,16 @@ func start_ladder(hit_normal: Vector3) -> void:
 	is_sliding = false
 	is_dodging = false
 
+	# Teleport to the ladder so mid-air leaps connect perfectly!
+	# (Using a slightly different offset than ledges so the player centers on the rungs)
+	global_position = hit_point + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.25, 0)
+
 	var look_target = global_position - ladder_normal
 	look_target.y = global_position.y
 	look_at(look_target, Vector3.UP)
 	head.rotation.x = 0
+	
+
 
 func stop_ladder() -> void:
 	is_on_ladder = false
