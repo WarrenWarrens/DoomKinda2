@@ -24,8 +24,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=1033066276]
 
-[node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D" unique_id=51882858]
-target_position = Vector3(0, 0, -3)
+[node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D" unique_id=1677302]
+target_position = Vector3(0, 0, -8)
 script = ExtResource("2_gntrk")
 
 [node name="Kick" parent="Head" unique_id=373542889 instance=ExtResource("3_52ee3")]

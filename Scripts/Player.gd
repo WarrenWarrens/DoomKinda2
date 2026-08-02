@@ -63,6 +63,7 @@ const HANG_SPEED: float = 3.0
 const HANG_DRAIN_RATE: float = 10.0
 var ledge_normal: Vector3 = Vector3.ZERO
 
+var pull_up_released: bool = true
 var pull_up_progress: float = 0.0
 var pull_up_counted: bool = false
 const PULL_UP_COST: float = 20.0
@@ -75,6 +76,7 @@ var ladder_normal: Vector3 = Vector3.ZERO
 const LADDER_SPEED: float = 4.0
 const LADDER_DRAIN_RATE: float = 4.0
 const TRAVERSE_COST: float = 15.0
+var current_climb_target: Node3D = null
 
 
 func _ready() -> void:
@@ -83,6 +85,7 @@ func _ready() -> void:
 	original_capsule_height = collision_shape.shape.height
 	original_shape_y = collision_shape.position.y
 	original_head_y = head.position.y
+	interact_ray.add_exception(self)
 	
 	equip_weapon(current_weapon_index)
 	
@@ -101,7 +104,10 @@ func _physics_process(delta: float) -> void:
 	if is_hanging:
 		var wants_pull_up = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 	
-		if wants_pull_up and PlayerStats.stamina > 0:
+		if not wants_pull_up:
+			pull_up_released = true
+			
+		if wants_pull_up and pull_up_released and PlayerStats.stamina > 0:
 			if pull_up_progress < 1.0:
 				pull_up_progress += delta * PULL_UP_SPEED
 				PlayerStats.change_stamina(-PULL_UP_COST * delta * PULL_UP_SPEED)
@@ -151,6 +157,7 @@ func _physics_process(delta: float) -> void:
 				var future_chest_pos = chest_position + (move_dir * 0.4)
 				
 				var space_state = get_world_3d().direct_space_state
+				
 				# FIX: Extended ray length to 1.0 to easily cover the new gap
 				var query = PhysicsRayQueryParameters3D.create(future_chest_pos, future_chest_pos - ledge_normal * 1.0)
 				# FIX: Tell the ray to completely ignore the player's collision box
@@ -159,7 +166,7 @@ func _physics_process(delta: float) -> void:
 				var result = space_state.intersect_ray(query)
 				
 				# If the ray misses the wall entirely, block the movement input!
-				if result.is_empty():
+				if result.is_empty() or result.collider != current_climb_target:
 					move_dir = Vector3.ZERO
 					
 			velocity = move_dir * HANG_SPEED
@@ -358,6 +365,8 @@ func _process(_delta: float) -> void:
 	interact_prompt.visible = false
 	
 	# 2. Raycast Interaction Logic
+	# 2. ShapeCast Interaction Logic
+	
 	if interact_ray.is_colliding():
 		var target = interact_ray.get_collider()
 		
@@ -366,13 +375,19 @@ func _process(_delta: float) -> void:
 			var hit_point = interact_ray.get_collision_point()
 			var hit_normal = interact_ray.get_collision_normal()
 			
+			if is_hanging or is_on_ladder:
+				if hit_point.distance_to(global_position) < 1.2:
+					return
+			
+				
+			var is_vertical_face = abs(hit_normal.y) < 0.05
+			
 			# --- FACE FILTERING MATH ---
 			# 1. Is the face completely vertical? (Rejects tops and bottoms)
-			var is_vertical_face = abs(hit_normal.y) < 0.1
-			
-			# 2. Is the player generally looking AT the face? (Rejects side-glancing)
 			var player_forward = -camera.global_transform.basis.z
-			var is_facing_surface = hit_normal.dot(player_forward) < -0.3
+			var is_facing_surface = hit_normal.dot(player_forward) < 0.5
+			# 2. Is the player generally looking AT the face? (Rejects side-glancing)
+			
 			# ---------------------------
 
 			# --- Ledge Logic ---
@@ -390,9 +405,9 @@ func _process(_delta: float) -> void:
 							PlayerStats.stamina_delay_timer = STAMINA_DELAY
 							is_hanging = false 
 							is_on_ladder = false
-							start_hanging(target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
+							start_hanging(target, target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
 					else:
-						start_hanging(target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
+						start_hanging(target, target.get_ledge_axis(), hit_point, hit_normal, target.get_can_climb())
 						
 			# --- Ladder Logic ---
 			# Ladders also benefit from the face filtering checks!
@@ -409,9 +424,9 @@ func _process(_delta: float) -> void:
 							PlayerStats.stamina_delay_timer = STAMINA_DELAY
 							is_hanging = false
 							is_on_ladder = false
-							start_ladder(hit_normal, hit_point)
+							start_ladder(target, hit_normal, hit_point)
 					else:
-						start_ladder(hit_normal, hit_point)
+						start_ladder(target, hit_normal, hit_point)
 
 			# --- Door / Object Logic ---
 			elif target.has_method("interact") and not is_hanging and not is_on_ladder:
@@ -425,28 +440,22 @@ func _process(_delta: float) -> void:
 		current_weapon_index = (current_weapon_index + 1) % weapons.size()
 		equip_weapon(current_weapon_index)
 
-func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_climb_flag: bool) -> void:
+func start_hanging(target: Node3D, axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_climb_flag: bool) -> void:
 	is_hanging = true
-	hide_current_weapon() # <--- Add this at the end of the function!
+	current_climb_target = target # Save the target!
 
-	# --- Derive the traversal axis from the wall's normal itself ---
-	# Instead of trusting the hand-set "is_x_axis_ledge" flag (which has to be
-	# perfectly consistent with how TrenchBroom's Z-up axes got remapped into
-	# Godot's Y-up world by FuncGodot), compute the wall's tangent directly.
-	# A vertical wall's normal is always horizontal, so crossing it with UP
-	# always produces a vector running exactly along the wall's face -
-	# correct no matter which world axis the ledge happens to run along.
 	var auto_axis = Vector3.UP.cross(hit_normal)
 	if auto_axis.length() < 0.01:
-		# Degenerate case (ray hit a near-horizontal surface) - fall back to
-		# the manually tagged axis from the Ledge entity.
 		ledge_axis = axis
 	else:
 		ledge_axis = auto_axis.normalized()
-	# print("Ledge grabbed | hit_normal: ", hit_normal, " | computed ledge_axis: ", ledge_axis)
 
 	ledge_can_climb = can_climb_flag
 	ledge_normal = hit_normal 
+	
+	pull_up_progress = 0.0 
+	velocity = Vector3.ZERO
+	pull_up_released = false # <--- Add this! Forces them to let go first
 	
 	PlayerStats.change_action(0)
 	
@@ -454,16 +463,69 @@ func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_c
 	if PlayerStats.get_prone(): PlayerStats.change_prone()
 	is_sliding = false
 	is_dodging = false
-	global_position = hit_point + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.35, 0)
-	#global_position = hit_point + (hit_normal * 0.5) - Vector3(0, original_capsule_height * 0.35, 0)
+	
+	# --- TOP LIP SNAPPING ---
+	# Shoot a ray down from slightly inside the wall, starting high above the player
+	var space_state = get_world_3d().direct_space_state
+	var lip_check_start = hit_point - (hit_normal * 0.1)
+	lip_check_start.y = hit_point.y + 1.2
+	var query = PhysicsRayQueryParameters3D.create(lip_check_start, lip_check_start + (Vector3.DOWN * 2.0))
+	query.exclude = [self.get_rid()]
+	var result = space_state.intersect_ray(query)
+	
+	var final_hang_y = hit_point.y
+	if not result.is_empty():
+		final_hang_y = result.position.y # We found the exact top of the box!
+		
+	global_position = Vector3(hit_point.x, final_hang_y, hit_point.z) + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.35, 0)
 
 	var look_target = global_position - hit_normal
 	look_target.y = global_position.y
 	look_at(look_target, Vector3.UP)
 	head.rotation.x = 0
 	
+	hide_current_weapon()
+	
+#func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_climb_flag: bool) -> void:
+	#is_hanging = true
+	#hide_current_weapon() # <--- Add this at the end of the function!
+#
+	## --- Derive the traversal axis from the wall's normal itself ---
+	## Instead of trusting the hand-set "is_x_axis_ledge" flag (which has to be
+	## perfectly consistent with how TrenchBroom's Z-up axes got remapped into
+	## Godot's Y-up world by FuncGodot), compute the wall's tangent directly.
+	## A vertical wall's normal is always horizontal, so crossing it with UP
+	## always produces a vector running exactly along the wall's face -
+	## correct no matter which world axis the ledge happens to run along.
+	#var auto_axis = Vector3.UP.cross(hit_normal)
+	#if auto_axis.length() < 0.01:
+		## Degenerate case (ray hit a near-horizontal surface) - fall back to
+		## the manually tagged axis from the Ledge entity.
+		#ledge_axis = axis
+	#else:
+		#ledge_axis = auto_axis.normalized()
+	## print("Ledge grabbed | hit_normal: ", hit_normal, " | computed ledge_axis: ", ledge_axis)
+#
+	#ledge_can_climb = can_climb_flag
+	#ledge_normal = hit_normal 
+	#
+	#PlayerStats.change_action(0)
+	#
+	#if PlayerStats.get_stealth(): PlayerStats.change_stealth()
+	#if PlayerStats.get_prone(): PlayerStats.change_prone()
+	#is_sliding = false
+	#is_dodging = false
+	#global_position = hit_point + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.35, 0)
+	##global_position = hit_point + (hit_normal * 0.5) - Vector3(0, original_capsule_height * 0.35, 0)
+#
+	#var look_target = global_position - hit_normal
+	#look_target.y = global_position.y
+	#look_at(look_target, Vector3.UP)
+	#head.rotation.x = 0
+	
 func stop_hanging() -> void:
 	is_hanging = false
+	current_climb_target = null # Clear it!
 	PlayerStats.change_action(1)
 	equip_weapon(current_weapon_index)
 
@@ -518,11 +580,13 @@ func vault_over_obstacle() -> void:
 	pull_up_progress = 0.0
 	head.position.y = original_head_y
 
-func start_ladder(hit_normal: Vector3, hit_point: Vector3) -> void:
+func start_ladder(target: Node3D, hit_normal: Vector3, hit_point: Vector3) -> void:
 	
 	is_on_ladder = true
+	current_climb_target = target # Save the target!
 	ladder_normal = hit_normal
-	hide_current_weapon() # <--- Add this at the end of the function!
+	pull_up_progress = 0.0
+	velocity = Vector3.ZERO
 	PlayerStats.change_action(0) 
 	
 	if PlayerStats.get_stealth(): PlayerStats.change_stealth()
@@ -538,11 +602,14 @@ func start_ladder(hit_normal: Vector3, hit_point: Vector3) -> void:
 	look_target.y = global_position.y
 	look_at(look_target, Vector3.UP)
 	head.rotation.x = 0
+	hide_current_weapon() # <--- Add this at the end of the function!
+
 	
 
 
 func stop_ladder() -> void:
 	is_on_ladder = false
+	current_climb_target = null # Clear it!
 	PlayerStats.change_action(1)
 	equip_weapon(current_weapon_index)
 
