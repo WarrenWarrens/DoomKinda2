@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://coq3vktn3p1tr" path="res://Scripts/InteractionRay.gd" id="2_gntrk"]
 [ext_resource type="PackedScene" uid="uid://bdxry7miuj5j7" path="res://Scenes/Axe.tscn" id="2_kyqiw"]
 [ext_resource type="PackedScene" uid="uid://ce82q17jqo7s3" path="res://Scenes/Kick.tscn" id="3_52ee3"]
-[ext_resource type="Script" uid="uid://eh1pb01xwdl0" path="res://Kick.gd" id="4_bhhdu"]
+[ext_resource type="Script" uid="uid://eh1pb01xwdl0" path="res://Scripts/Kick.gd" id="4_bhhdu"]
 [ext_resource type="PackedScene" uid="uid://dvewtmm6d837k" path="res://Scenes/HUD.tscn" id="4_dewec"]
 [ext_resource type="PackedScene" uid="uid://bqmqhk1fsyhsm" path="res://Scenes/Pistol.tscn" id="4_nn08x"]
 [ext_resource type="PackedScene" uid="uid://b0iuaegeuhgbn" path="res://Scenes/PauseMenu.tscn" id="5_5ixxa"]
@@ -41,6 +41,3 @@ target_position = Vector3(0, 3, 0)
 [node name="HUD" parent="." unique_id=2074623536 instance=ExtResource("4_dewec")]
 
 [node name="PauseMenu" parent="." unique_id=619445293 instance=ExtResource("5_5ixxa")]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1439790751]
-light_energy = 1.779

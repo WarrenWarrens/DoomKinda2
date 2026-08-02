@@ -8,10 +8,10 @@
 [ext_resource type="Material" uid="uid://kuufie1uvrxf" path="res://textures/o1.tres" id="6_2sbg8"]
 [ext_resource type="Material" uid="uid://cfv126dkgqmex" path="res://textures/p1.tres" id="7_kih24"]
 [ext_resource type="Material" uid="uid://gvqxfjtqy3qg" path="res://textures/str_blood_large.tres" id="9_epros"]
-[ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Levels/Ledge.gd" id="10_2sbg8"]
+[ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Scripts/Ledge.gd" id="10_2sbg8"]
 [ext_resource type="Material" uid="uid://dsr4tcvge8cfm" path="res://textures/r1.tres" id="10_kih24"]
-[ext_resource type="Script" uid="uid://dthyte7wxyyji" path="res://Interactable.gd" id="11_kih24"]
-[ext_resource type="Script" uid="uid://cbve1v0dvw6cp" path="res://Levels/Ladder.gd" id="12_fqk6u"]
+[ext_resource type="Script" uid="uid://dthyte7wxyyji" path="res://Scripts/Doors.gd" id="11_kih24"]
+[ext_resource type="Script" uid="uid://cbve1v0dvw6cp" path="res://Scripts/Ladder.gd" id="12_fqk6u"]
 [ext_resource type="PackedScene" uid="uid://ckudr8chj1kgo" path="res://Scenes/Player.tscn" id="13_kih24"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_kih24"]
@@ -1073,6 +1073,22 @@ _surfaces = [{
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_xrarx"]
 points = PackedVector3Array(0.25, 5, 0.75, 0.25, -5, 0.75, -0.25, 5, 0.75, -0.25, -5, 0.75, 0.25, 5, -0.75, 0.25, -5, -0.75, -0.25, 5, -0.75, -0.25, -5, -0.75)
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ek3ai"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_42q0v"]
+noise = SubResource("FastNoiseLite_ek3ai")
+seamless = true
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7a8fh"]
+sky_cover = SubResource("NoiseTexture2D_42q0v")
+
+[sub_resource type="Sky" id="Sky_tgb25"]
+sky_material = SubResource("ProceduralSkyMaterial_7a8fh")
+
+[sub_resource type="Environment" id="Environment_vyp0t"]
+background_mode = 2
+sky = SubResource("Sky_tgb25")
+
 [node name="TestLevelTwo" type="Node3D" unique_id=2038518312]
 
 [node name="FuncGodotMap2" type="Node3D" parent="." unique_id=1302156849]
@@ -1671,6 +1687,8 @@ shape = SubResource("ConvexPolygonShape3D_sofha")
 [node name="entity_35_func_door" type="StaticBody3D" parent="FuncGodotMap2" unique_id=1763251423]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.75, 2.75, 24.75)
 script = ExtResource("11_kih24")
+prompt_message = "Inside Level"
+next_scene_path = "uid://duswf34ijx8l0"
 
 [node name="entity_35_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap2/entity_35_func_door" unique_id=538238421]
 mesh = SubResource("ArrayMesh_oquv2")
@@ -1681,6 +1699,8 @@ shape = SubResource("ConvexPolygonShape3D_higkg")
 [node name="entity_36_func_door" type="StaticBody3D" parent="FuncGodotMap2" unique_id=1831830065]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.75, 2.75, 29)
 script = ExtResource("11_kih24")
+prompt_message = "Other Test Level"
+next_scene_path = "uid://w4i51c8iv1xs"
 
 [node name="entity_36_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap2/entity_36_func_door" unique_id=850465057]
 mesh = SubResource("ArrayMesh_lbs1n")
@@ -1748,11 +1768,18 @@ mesh = SubResource("ArrayMesh_b8nab")
 [node name="entity_42_brush_0_collision_shape" type="CollisionShape3D" parent="FuncGodotMap2/entity_42_func_ladder" unique_id=2143702028]
 shape = SubResource("ConvexPolygonShape3D_xrarx")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="FuncGodotMap2" unique_id=732853953]
+environment = SubResource("Environment_vyp0t")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="FuncGodotMap2" unique_id=1197284117]
+transform = Transform3D(1, 0, 0, 0, 0.58778507, 0.8090171, 0, -0.8090171, 0.58778507, 0, 0, 0)
+shadow_enabled = true
+
 [node name="Player" parent="." unique_id=1157179926 instance=ExtResource("13_kih24")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.7219224, 0)
 collision_layer = 3
 collision_mask = 3
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=462857071]
-transform = Transform3D(-0.35144088, 0.93621016, 0, -0.93621016, -0.35144088, 0, 0, 0, 1, -62.59576, 86.01305, 0)
+transform = Transform3D(-0.8407871, 0.541366, 0, -0.541366, -0.8407871, 0, 0, 0, 1, -62.59576, 86.01305, 0)
 light_energy = 3.337

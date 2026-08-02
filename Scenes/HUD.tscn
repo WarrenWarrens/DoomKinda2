@@ -3,6 +3,8 @@
 [ext_resource type="FontFile" uid="uid://e1yckbnmsyen" path="res://Assets/Art/daydream_3/Daydream DEMO.otf" id="1_37p78"]
 [ext_resource type="Script" uid="uid://cg8yakgevo7wv" path="res://Scripts/HUD.gd" id="1_64ctp"]
 [ext_resource type="Texture2D" uid="uid://bfd5kbp81qf1x" path="res://Assets/Art/over.png" id="3_8sq4i"]
+[ext_resource type="Script" uid="uid://b6h0xasp8jsm7" path="res://Scenes/FPSCounter.gd" id="4_s3jbq"]
+[ext_resource type="Texture2D" uid="uid://doe4yus103flx" path="res://Assets/meme.png" id="5_c3eba"]
 
 [sub_resource type="Theme" id="Theme_ttpud"]
 default_font = ExtResource("1_37p78")
@@ -53,6 +55,27 @@ layout_mode = 2
 text = "100"
 horizontal_alignment = 2
 
+[node name="Ammo2" type="VBoxContainer" parent="MarginContainer/Stats" unique_id=113903377]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+offset_transform_enabled = true
+offset_transform_position = Vector2(350, 0)
+alignment = 2
+
+[node name="AmmoLabel" type="Label" parent="MarginContainer/Stats/Ammo2" unique_id=570908211]
+visible = false
+layout_mode = 2
+text = "Ammo"
+
+[node name="BStaminaLabel" type="Label" parent="MarginContainer/Stats/Ammo2" unique_id=1657652524]
+layout_mode = 2
+text = "B-Stam"
+
+[node name="StaminaLabel2" type="Label" parent="MarginContainer/Stats/Ammo2" unique_id=1472061656]
+layout_mode = 2
+text = "Stam"
+
 [node name="Ammo" type="VBoxContainer" parent="MarginContainer/Stats" unique_id=196197034]
 layout_mode = 2
 size_flags_horizontal = 10
@@ -85,8 +108,49 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -103.0
+offset_top = 37.0
 offset_right = 103.0
-offset_bottom = 28.0
+offset_bottom = 65.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_37p78")
 text = "[E] to interact"
+
+[node name="Label" type="Label" parent="." unique_id=1682726059]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("1_37p78")
+text = "0"
+script = ExtResource("4_s3jbq")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=606596044]
+position = Vector2(1000.00006, 14)
+scale = Vector2(0.2265625, 0.2265625)
+texture = ExtResource("5_c3eba")
+
+[node name="Label2" type="Label" parent="." unique_id=1397319444]
+offset_left = 972.0
+offset_top = 37.0
+offset_right = 1139.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 11
+theme_override_constants/shadow_outline_size = 12
+text = "www.BANDiCAM.com"
+
+[node name="SpeedLabel" type="Label" parent="." unique_id=1152036593]
+offset_left = 1.0
+offset_top = 26.0
+offset_right = 41.0
+offset_bottom = 49.0
+theme_override_fonts/font = ExtResource("1_37p78")
+
+[node name="StateLabel" type="Label" parent="." unique_id=2127396518]
+offset_left = 1.0
+offset_top = 50.0
+offset_right = 41.0
+offset_bottom = 73.0
+theme_override_fonts/font = ExtResource("1_37p78")

@@ -51,23 +51,23 @@ var is_prone = false
 #/////////////////////////////////////////////////////////////
 
 
-func reset():
-	var health = 100
-	var max_health = 200
-	var armour = 0
-	var max_armour = 100
-	var stamina = 100
-	var max_stamina = 100
-	var stamina_regen = 15
-	
-	var battlestamina = 100
-	var max_battlestamina = 100
-	var battlestamina_regen = 15
-	
-	var is_stealth = false
-	var canregen = true
-
-	
+#func reset():
+	#var health = 100
+	#var max_health = 200
+	#var armour = 0
+	#var max_armour = 100
+	#var stamina = 100
+	#var max_stamina = 100
+	#var stamina_regen = 15
+	#
+	#var battlestamina = 100
+	#var max_battlestamina = 100
+	#var battlestamina_regen = 15
+	#
+	#var is_stealth = false
+	#var canregen = true
+#
+	#
 #/////////////////////////////////////////////////////////////
 
 
@@ -76,16 +76,16 @@ func _ready():
 	
 #/////////////////////////////////////////////////////////////
 	
-func take_damage(amount):
-	var tmp = amount
-	if amount > armour:
-		amount = amount - armour
-		armour = 0
-	else:
-		change_armour(-amount)
-		return
-	###apply remaining damage to health
-	change_health(-amount)
+#func take_damage(amount):
+	#var tmp = amount
+	#if amount > armour:
+		#amount = amount - armour
+		#armour = 0
+	#else:
+		#change_armour(-amount)
+		#return
+	####apply remaining damage to health
+	#change_health(-amount)
 		
 #/////////////////////////////////////////////////////////////
 

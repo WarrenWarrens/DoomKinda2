@@ -7,7 +7,7 @@ extends CanvasLayer
 @onready var stamina = $MarginContainer/Stats/Ammo/StaminaValue
 @onready var battlestamina = $MarginContainer/Stats/Ammo/BattleStaminaValue
 
-func _process(delta):
+func _process(_delta):
 	armour.text = PlayerStats.get_armour()
 	health.text = PlayerStats.get_health()
 	stamina.text = PlayerStats.get_stamina()

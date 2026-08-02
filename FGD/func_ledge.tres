@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="FuncGodotFGDSolidClass" format=3 uid="uid://n1auajkmpctx"]
 
 [ext_resource type="Script" uid="uid://5cow84q03m6a" path="res://addons/func_godot/src/fgd/func_godot_fgd_solid_class.gd" id="1_ftd2v"]
-[ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Levels/Ledge.gd" id="2_uhwel"]
+[ext_resource type="Script" uid="uid://bmx43rd8kdbb5" path="res://Scripts/Ledge.gd" id="2_uhwel"]
 
 [resource]
 script = ExtResource("1_ftd2v")

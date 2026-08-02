@@ -42,11 +42,11 @@ func _on_test_level_button_pressed() -> void:
 
 
 func _on_level_one_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://Levels/inside.tscn")
+	get_tree().change_scene_to_file("res://Levels/TestLevelOne.tscn")
 
 
 func _on_level_two_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://Levels/testlevel.tscn")
+	get_tree().change_scene_to_file("res://Levels/inside.tscn")
 
 
 	pass # Replace with function body.

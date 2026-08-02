@@ -15,3 +15,6 @@ func get_ledge_axis() -> Vector3:
 
 func get_can_climb() -> bool:
 	return str(can_climb) == "1" or str(can_climb) == "true"
+
+#func _ready() -> void:
+	#self.visible = false # Turns the mesh invisible, but keeps the collision box!

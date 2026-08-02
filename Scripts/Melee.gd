@@ -21,7 +21,7 @@ func _exit_tree() -> void:
 func check_hit():
 	pass
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	can_attack = PlayerStats.get_action()
 	# --- Desperation Attack Math ---

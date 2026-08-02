@@ -149,12 +149,13 @@ layout_mode = 2
 [node name="TestLevelButton" type="Button" parent="CenterContainer/LevelsMenu" unique_id=1745361254]
 layout_mode = 2
 theme = SubResource("Theme_b76km")
-text = "Test Level"
+text = "Test Level Two"
 
 [node name="LevelOneButton" type="Button" parent="CenterContainer/LevelsMenu" unique_id=531187009]
 layout_mode = 2
 theme = SubResource("Theme_lbqne")
-text = "Level One"
+text = "Test Level One
+"
 
 [node name="LevelTwoButton" type="Button" parent="CenterContainer/LevelsMenu" unique_id=321067295]
 layout_mode = 2
