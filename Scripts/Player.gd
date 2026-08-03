@@ -279,30 +279,31 @@ func _physics_process(delta: float) -> void:
 
 	var is_crouching = PlayerStats.get_stealth()
 	var is_prone = PlayerStats.get_prone()
-
-	# --- Capsule Height Lerping ---
+	
 	var standing_height = original_capsule_height
-	var crouch_height = original_capsule_height * (5.0 / 10.0)
-	var prone_height = original_capsule_height * (3.0 / 10.0)
-	var target_height = standing_height
-	var y_offset = 0.0
-	
-	
+	var crouch_height = (standing_height * 0.50) -0.2 # 50% height (5 blocks)
+	var prone_height = (standing_height * 0.30) -0.2 # 30% height (3 blocks)
 
+	var target_height = standing_height
+	var shape_y_offset = 0.0
+	var head_y_offset = 0.0
+	
 	if is_prone:
 		target_height = prone_height
-		y_offset = (standing_height - prone_height) / 2.0
+		shape_y_offset = (standing_height - prone_height) / 2.0
+		head_y_offset = standing_height - prone_height # Camera moves the full distance!
 	elif is_crouching:
 		target_height = crouch_height
-		y_offset = (standing_height - crouch_height) / 2.0
-
-	var target_shape_y = original_shape_y - y_offset
-	var target_head_y = original_head_y - y_offset
+		shape_y_offset = (standing_height - crouch_height) / 2.0
+		head_y_offset = standing_height - crouch_height # Camera moves the full distance!
+		
+	var target_shape_y = original_shape_y - shape_y_offset
+	var target_head_y = original_head_y - head_y_offset
 	
-	collision_shape.shape.height = lerp(collision_shape.shape.height, target_height, delta * 10.0)
-	collision_shape.position.y = lerp(collision_shape.position.y, target_shape_y, delta * 10.0)
-	head.position.y = lerp(head.position.y, target_head_y, delta * 10.0)
-	
+	collision_shape.shape.height = lerp(collision_shape.shape.height, target_height, delta * 15.0)
+	collision_shape.position.y = lerp(collision_shape.position.y, target_shape_y, delta * 15.0)
+	head.position.y = lerp(head.position.y, target_head_y, delta * 15.0)
+	# --- Capsule Height Lerping ---
 
 	# --- 3. Dodge Logic ---
 	if is_dodging:

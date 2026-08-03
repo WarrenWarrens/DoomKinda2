@@ -10,17 +10,19 @@
 [ext_resource type="PackedScene" uid="uid://b0iuaegeuhgbn" path="res://Scenes/PauseMenu.tscn" id="5_5ixxa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ttpud"]
-height = 5.0
+radius = 0.4
+height = 4.8
 
 [node name="Player" type="CharacterBody3D" unique_id=1157179926]
 collision_mask = 2
 script = ExtResource("1_onrkg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1001205909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 shape = SubResource("CapsuleShape3D_ttpud")
 
 [node name="Head" type="Node3D" parent="." unique_id=1608205757]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=1033066276]
 
@@ -36,7 +38,8 @@ script = ExtResource("4_bhhdu")
 [node name="Pistol" parent="Head" unique_id=1175262872 instance=ExtResource("4_nn08x")]
 
 [node name="CeilingCheck" type="RayCast3D" parent="." unique_id=962993918]
-target_position = Vector3(0, 3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+target_position = Vector3(0, 4.8, 0)
 
 [node name="HUD" parent="." unique_id=2074623536 instance=ExtResource("4_dewec")]
 
