@@ -25,6 +25,7 @@ var current_b_stamina_regen: float = 0.0
 
 
 var action = true
+var right_hand_dom: bool = true
 
 
 #var canregen = false
@@ -152,6 +153,9 @@ func change_stealth():
 
 func get_prone():
 	return is_prone
+	
+func get_dom_hand():
+	return right_hand_dom
 
 func _process(delta: float) -> void:
 	# 1. Regular Stamina Regen

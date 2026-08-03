@@ -48,6 +48,8 @@ var is_sliding: bool = false
 @onready var speed_label = $HUD/SpeedLabel
 @onready var state_label = $HUD/StateLabel
 
+@onready var right_dom_hand = PlayerStats.get_dom_hand()
+
 
 var current_weapon_index: int = 0
 
@@ -81,7 +83,6 @@ var current_climb_target: Node3D = null
 var holding_left_hand: bool = true
 var holding_right_hand: bool = true
 const ONE_HAND_DRAIN_MULT: float = 1.75 # Drains 75% faster when using one hand!
-var is_right_dom: bool = true
 
 
 func _ready() -> void:
@@ -111,14 +112,25 @@ func _physics_process(delta: float) -> void:
 		
 		var current_hang_drain = HANG_DRAIN_RATE
 		if not holding_left_hand or not holding_right_hand:
-			current_hang_drain *= ONE_HAND_DRAIN_MULT
+			if right_dom_hand:
+				if not holding_left_hand:
+					current_hang_drain *= ONE_HAND_DRAIN_MULT
+				else:
+					current_hang_drain *= (ONE_HAND_DRAIN_MULT * 1.5)
+			elif not right_dom_hand:
+				if not holding_right_hand:
+					current_hang_drain *= ONE_HAND_DRAIN_MULT
+				else:
+					current_hang_drain *= (ONE_HAND_DRAIN_MULT * 1.5)
+				
+
 		
 		var wants_pull_up = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 	
 		if not wants_pull_up:
 			pull_up_released = true
 			
-		if wants_pull_up and pull_up_released and PlayerStats.stamina > 0:
+		if wants_pull_up and pull_up_released and PlayerStats.stamina > 0 and holding_left_hand and holding_right_hand:
 			if pull_up_progress < 1.0:
 				pull_up_progress += delta * PULL_UP_SPEED
 				PlayerStats.change_stamina(-PULL_UP_COST * delta * PULL_UP_SPEED)
