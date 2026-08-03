@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://b0iuaegeuhgbn" path="res://Scenes/PauseMenu.tscn" id="5_5ixxa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ttpud"]
-radius = 0.4
+radius = 0.6
 height = 4.8
 
 [node name="Player" type="CharacterBody3D" unique_id=1157179926]
