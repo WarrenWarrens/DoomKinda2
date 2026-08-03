@@ -78,6 +78,11 @@ const LADDER_DRAIN_RATE: float = 4.0
 const TRAVERSE_COST: float = 15.0
 var current_climb_target: Node3D = null
 
+var holding_left_hand: bool = true
+var holding_right_hand: bool = true
+const ONE_HAND_DRAIN_MULT: float = 1.75 # Drains 75% faster when using one hand!
+var is_right_dom: bool = true
+
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -102,6 +107,12 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_hanging:
+		update_hand_states(ledge_normal)
+		
+		var current_hang_drain = HANG_DRAIN_RATE
+		if not holding_left_hand or not holding_right_hand:
+			current_hang_drain *= ONE_HAND_DRAIN_MULT
+		
 		var wants_pull_up = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 	
 		if not wants_pull_up:
@@ -112,14 +123,14 @@ func _physics_process(delta: float) -> void:
 				pull_up_progress += delta * PULL_UP_SPEED
 				PlayerStats.change_stamina(-PULL_UP_COST * delta * PULL_UP_SPEED)
 			else:
-				PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+				PlayerStats.change_stamina(-current_hang_drain * delta)
 				
 				if ledge_can_climb and Input.is_action_just_pressed("up"):
 					vault_over_obstacle()
 					return
 		else:
 			pull_up_progress -= delta * PULL_UP_SPEED
-			PlayerStats.change_stamina(-HANG_DRAIN_RATE * delta)
+			PlayerStats.change_stamina(-current_hang_drain * delta)
 			
 		PlayerStats.stamina_delay_timer = STAMINA_DELAY
 		pull_up_progress = clamp(pull_up_progress, 0.0, 1.0)
@@ -177,6 +188,11 @@ func _physics_process(delta: float) -> void:
 	# --- LADDER STATE OVERRIDE ---
 	if is_on_ladder:
 		# Check if we want to fast-slide down
+		update_hand_states(ladder_normal)
+		var current_ladder_drain = LADDER_DRAIN_RATE
+		
+		if not holding_left_hand or not holding_right_hand:
+			current_ladder_drain *= ONE_HAND_DRAIN_MULT
 		
 		if Input.is_action_pressed("sprint"):
 			# Move straight down at double speed with ZERO stamina drain
@@ -188,9 +204,11 @@ func _physics_process(delta: float) -> void:
 				stop_ladder()
 		
 			return
-			
-		PlayerStats.change_stamina(-LADDER_DRAIN_RATE * delta)
+		
+		PlayerStats.change_stamina(-current_ladder_drain * delta)
 		PlayerStats.stamina_delay_timer = STAMINA_DELAY
+		
+
 		
 		# Drop if out of stamina or pressing crouch
 		if PlayerStats.stamina <= 0 or Input.is_action_just_pressed("crouch"):
@@ -264,8 +282,8 @@ func _physics_process(delta: float) -> void:
 
 	# --- Capsule Height Lerping ---
 	var standing_height = original_capsule_height
-	var crouch_height = original_capsule_height * (7.0 / 12.0)
-	var prone_height = original_capsule_height * (3.0 / 12.0)
+	var crouch_height = original_capsule_height * (5.0 / 10.0)
+	var prone_height = original_capsule_height * (3.0 / 10.0)
 	var target_height = standing_height
 	var y_offset = 0.0
 	
@@ -353,14 +371,38 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	update_hud_stats()
 	
-
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * MOUSE_SENS)
+		var yaw_change = -event.relative.x * MOUSE_SENS
+		
+		# --- Camera Restriction During Pull-up ---
+		if is_hanging and pull_up_progress > 0.0:
+			# Preview what our rotation would be if we allowed the mouse movement
+			var future_basis = transform.basis.rotated(Vector3.UP, yaw_change)
+			var future_forward = -future_basis.z
+			
+			# If the turn pushes us beyond the 60-degree threshold, block the turn!
+			if future_forward.dot(ledge_normal) > -0.5:
+				yaw_change = 0.0 
+				
+		# Apply the horizontal turn
+		rotate_y(yaw_change)
+
+		# Apply the vertical head look (pitch)
 		head.rotate_x(-event.relative.y * MOUSE_SENS)
 		head.rotation.x = clamp(head.rotation.x, -1.2, 1.2)
+		
+#func _unhandled_input(event: InputEvent) -> void:
+	#if event is InputEventMouseMotion:
+		#rotate_y(-event.relative.x * MOUSE_SENS)
+		#head.rotate_x(-event.relative.y * MOUSE_SENS)
+		#head.rotation.x = clamp(head.rotation.x, -1.2, 1.2)
 
 func _process(_delta: float) -> void:
+	if is_hanging or is_on_ladder:
+		interact_ray.target_position.z = -8.0 # Long reach for leaping
+	else:
+		interact_ray.target_position.z = -4.0 # Standard reach for ground interaction
 	# 1. Default state: hide the prompt
 	interact_prompt.visible = false
 	
@@ -486,46 +528,12 @@ func start_hanging(target: Node3D, axis: Vector3, hit_point: Vector3, hit_normal
 	
 	hide_current_weapon()
 	
-#func start_hanging(axis: Vector3, hit_point: Vector3, hit_normal: Vector3, can_climb_flag: bool) -> void:
-	#is_hanging = true
-	#hide_current_weapon() # <--- Add this at the end of the function!
-#
-	## --- Derive the traversal axis from the wall's normal itself ---
-	## Instead of trusting the hand-set "is_x_axis_ledge" flag (which has to be
-	## perfectly consistent with how TrenchBroom's Z-up axes got remapped into
-	## Godot's Y-up world by FuncGodot), compute the wall's tangent directly.
-	## A vertical wall's normal is always horizontal, so crossing it with UP
-	## always produces a vector running exactly along the wall's face -
-	## correct no matter which world axis the ledge happens to run along.
-	#var auto_axis = Vector3.UP.cross(hit_normal)
-	#if auto_axis.length() < 0.01:
-		## Degenerate case (ray hit a near-horizontal surface) - fall back to
-		## the manually tagged axis from the Ledge entity.
-		#ledge_axis = axis
-	#else:
-		#ledge_axis = auto_axis.normalized()
-	## print("Ledge grabbed | hit_normal: ", hit_normal, " | computed ledge_axis: ", ledge_axis)
-#
-	#ledge_can_climb = can_climb_flag
-	#ledge_normal = hit_normal 
-	#
-	#PlayerStats.change_action(0)
-	#
-	#if PlayerStats.get_stealth(): PlayerStats.change_stealth()
-	#if PlayerStats.get_prone(): PlayerStats.change_prone()
-	#is_sliding = false
-	#is_dodging = false
-	#global_position = hit_point + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.35, 0)
-	##global_position = hit_point + (hit_normal * 0.5) - Vector3(0, original_capsule_height * 0.35, 0)
-#
-	#var look_target = global_position - hit_normal
-	#look_target.y = global_position.y
-	#look_at(look_target, Vector3.UP)
-	#head.rotation.x = 0
 	
 func stop_hanging() -> void:
 	is_hanging = false
-	current_climb_target = null # Clear it!
+	holding_left_hand = true
+	holding_right_hand = true
+	current_climb_target = null 
 	PlayerStats.change_action(1)
 	equip_weapon(current_weapon_index)
 
@@ -609,7 +617,9 @@ func start_ladder(target: Node3D, hit_normal: Vector3, hit_point: Vector3) -> vo
 
 func stop_ladder() -> void:
 	is_on_ladder = false
-	current_climb_target = null # Clear it!
+	holding_left_hand = true
+	holding_right_hand = true
+	current_climb_target = null
 	PlayerStats.change_action(1)
 	equip_weapon(current_weapon_index)
 
@@ -638,6 +648,32 @@ func update_hud_stats() -> void:
 	elif Input.is_action_pressed("sprint") and current_speed > WALK_SPEED:
 		# Only say sprinting if they are actually moving fast enough
 		current_state = "Sprinting" 
+	if is_hanging or is_on_ladder:
+		if not holding_right_hand:
+			current_state += " (Left Hand Only)"
+		elif not holding_left_hand:
+			current_state += " (Right Hand Only)"
+		else:
+			current_state += " (Both Hands)"
 		
 	state_label.text = "State: " + current_state
 	
+func update_hand_states(wall_normal: Vector3) -> void:
+	var look_dot = (-transform.basis.z).dot(wall_normal)
+	var right_dot = transform.basis.x.dot(wall_normal)
+	
+	# -1.0 means looking dead at the wall. 
+	# > -0.5 means looking more than 60 degrees away (over a shoulder).
+	if look_dot > -0.5:
+		if right_dot > 0:
+			# Looking right (over right shoulder) -> right hand lets go, left holds!
+			holding_left_hand = true
+			holding_right_hand = false
+		else:
+			# Looking left (over left shoulder) -> left hand lets go, right holds!
+			holding_left_hand = false
+			holding_right_hand = true
+	else:
+		# Looking generally forward -> both hands on the wall
+		holding_left_hand = true
+		holding_right_hand = true
