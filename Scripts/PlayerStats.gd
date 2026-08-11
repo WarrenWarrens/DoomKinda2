@@ -52,23 +52,23 @@ var is_prone = false
 #/////////////////////////////////////////////////////////////
 
 
-#func reset():
-	#var health = 100
-	#var max_health = 200
-	#var armour = 0
-	#var max_armour = 100
-	#var stamina = 100
-	#var max_stamina = 100
-	#var stamina_regen = 15
-	#
-	#var battlestamina = 100
-	#var max_battlestamina = 100
-	#var battlestamina_regen = 15
-	#
-	#var is_stealth = false
-	#var canregen = true
-#
-	#
+func reset():
+	health = 100
+	max_health = 200
+	armour = 0
+	max_armour = 100
+	stamina = 100
+	max_stamina = 100
+	stamina_regen = 15
+	
+	battlestamina = 100
+	max_battlestamina = 100
+	battlestamina_regen = 15
+	
+	is_stealth = false
+	#canregen = true
+
+	
 #/////////////////////////////////////////////////////////////
 
 

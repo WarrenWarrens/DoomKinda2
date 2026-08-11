@@ -1,11 +1,5 @@
 extends CharacterBody3D
 
-#Crouch height 3 blocks
-#Player height 2m or 5 blocks
-
-#player height 1.9m or 4 blocks  (8 blocks at 3m)
-#crouch height 3 blocks at 3m
-
 # --- Movement Variables ---
 const WALK_SPEED: float = 7.0
 const SPRINT_SPEED: float = 14.0
@@ -86,6 +80,7 @@ const ONE_HAND_DRAIN_MULT: float = 1.75 # Drains 75% faster when using one hand!
 
 
 func _ready() -> void:
+	get_window().grab_focus()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	# Save our standing dimensions so we can lerp back to them
 	original_capsule_height = collision_shape.shape.height
@@ -107,6 +102,7 @@ func _ready() -> void:
 	floor_snap_length = 0.5
 
 func _physics_process(delta: float) -> void:
+	var input_dir := Input.get_vector("left", "right", "up", "down")
 	if is_hanging:
 		update_hand_states(ledge_normal)
 		
@@ -166,7 +162,7 @@ func _physics_process(delta: float) -> void:
 		if pull_up_progress > 0.0:
 			velocity = Vector3.ZERO
 		else:
-			var input_dir := Input.get_vector("left", "right", "up", "down")
+			#var input_dir := Input.get_vector("left", "right", "up", "down")
 			var alignment = sign(transform.basis.x.dot(ledge_axis))
 			if alignment == 0:
 				alignment = 1.0
@@ -177,7 +173,7 @@ func _physics_process(delta: float) -> void:
 			if move_dir.length() > 0:
 				# FIX: Shoot from slightly lower down (0.25) so it doesn't skim the top lip
 				var chest_position = global_position + Vector3(0, original_capsule_height * 0.33, 0)
-				var future_chest_pos = chest_position + (move_dir * 0.4)
+				var future_chest_pos = chest_position + (move_dir * 0.80)
 				
 				var space_state = get_world_3d().direct_space_state
 				
@@ -188,9 +184,12 @@ func _physics_process(delta: float) -> void:
 				
 				var result = space_state.intersect_ray(query)
 				
-				# If the ray misses the wall entirely, block the movement input!
-				if result.is_empty() or result.collider != current_climb_target:
+				if result.is_empty() or not result.collider.has_method("get_ledge_axis"):
 					move_dir = Vector3.ZERO
+					
+				# If the ray misses the wall entirely, block the movement input!
+				#if result.is_empty() or result.collider != current_climb_target:
+					#move_dir = Vector3.ZERO
 					
 			velocity = move_dir * HANG_SPEED
 			
@@ -227,10 +226,11 @@ func _physics_process(delta: float) -> void:
 			stop_ladder()
 			return
 			
-		var input_dir := Input.get_vector("left", "right", "up", "down")
+		#var input_dir := Input.get_vector("left", "right", "up", "down")
 		
 		# Move Left/Right locally, and Up/Down globally
 		# (Input 'up' returns -y, so multiplying by -1 makes W go UP)
+		
 		var move_dir = (transform.basis.x * input_dir.x) + (Vector3.UP * -input_dir.y)
 		
 		velocity = move_dir * LADDER_SPEED
@@ -253,8 +253,9 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	var input_dir := Input.get_vector("left", "right", "up", "down")
+	#var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	#var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	var is_moving = direction.length() > 0
 	
 	# 1. Determine if we are actively holding sprint (Can't sprint if crouched or prone)
@@ -413,6 +414,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	if is_hanging or is_on_ladder:
+		
 		interact_ray.target_position.z = -8.0 # Long reach for leaping
 	else:
 		interact_ray.target_position.z = -4.0 # Standard reach for ground interaction
@@ -431,7 +433,7 @@ func _process(_delta: float) -> void:
 			var hit_normal = interact_ray.get_collision_normal()
 			
 			if is_hanging or is_on_ladder:
-				if hit_point.distance_to(global_position) < 1.2:
+				if hit_point.distance_to(camera.global_position) < 2.0:
 					return
 			
 				
@@ -531,8 +533,8 @@ func start_hanging(target: Node3D, axis: Vector3, hit_point: Vector3, hit_normal
 	var final_hang_y = hit_point.y
 	if not result.is_empty():
 		final_hang_y = result.position.y # We found the exact top of the box!
-		
-	global_position = Vector3(hit_point.x, final_hang_y, hit_point.z) + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.35, 0)
+	
+	global_position = Vector3(hit_point.x, final_hang_y, hit_point.z) + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.85, 0)
 
 	var look_target = global_position - hit_normal
 	look_target.y = global_position.y
@@ -617,7 +619,7 @@ func start_ladder(target: Node3D, hit_normal: Vector3, hit_point: Vector3) -> vo
 
 	# Teleport to the ladder so mid-air leaps connect perfectly!
 	# (Using a slightly different offset than ledges so the player centers on the rungs)
-	global_position = hit_point + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.25, 0)
+	global_position = hit_point + (hit_normal * 0.6) - Vector3(0, original_capsule_height * 0.75, 0)
 
 	var look_target = global_position - ladder_normal
 	look_target.y = global_position.y

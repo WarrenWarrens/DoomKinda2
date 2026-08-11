@@ -222,6 +222,7 @@ shape = SubResource("ConvexPolygonShape3D_r1mcb")
 [node name="entity_1_func_ledge" type="StaticBody3D" parent="FuncGodotMap" unique_id=1346338716]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 10.75, -2)
 script = ExtResource("9_siu1l")
+is_x_axis_ledge = 0
 
 [node name="entity_1_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_1_func_ledge" unique_id=1897117572]
 mesh = SubResource("ArrayMesh_g0hro")
@@ -232,6 +233,7 @@ shape = SubResource("ConvexPolygonShape3D_7xc7v")
 [node name="entity_2_func_ledge" type="StaticBody3D" parent="FuncGodotMap" unique_id=1162306667]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 6.75, -3.5)
 script = ExtResource("9_siu1l")
+is_x_axis_ledge = 0
 
 [node name="entity_2_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_2_func_ledge" unique_id=2035803282]
 mesh = SubResource("ArrayMesh_siu1l")
@@ -242,6 +244,7 @@ shape = SubResource("ConvexPolygonShape3D_w7vxw")
 [node name="entity_3_func_ledge" type="StaticBody3D" parent="FuncGodotMap" unique_id=410440195]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 3.75, -3.25)
 script = ExtResource("9_siu1l")
+is_x_axis_ledge = 0
 
 [node name="entity_3_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_3_func_ledge" unique_id=222796939]
 mesh = SubResource("ArrayMesh_qk70a")
@@ -252,6 +255,7 @@ shape = SubResource("ConvexPolygonShape3D_xg4x2")
 [node name="entity_4_func_ledge" type="StaticBody3D" parent="FuncGodotMap" unique_id=1729042509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 4.75, -13.25)
 script = ExtResource("9_siu1l")
+is_x_axis_ledge = 0
 
 [node name="entity_4_mesh_instance" type="MeshInstance3D" parent="FuncGodotMap/entity_4_func_ledge" unique_id=1923856915]
 mesh = SubResource("ArrayMesh_ua73d")
