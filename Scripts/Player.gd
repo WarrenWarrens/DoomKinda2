@@ -184,8 +184,12 @@ func _physics_process(delta: float) -> void:
 				
 				var result = space_state.intersect_ray(query)
 				
-				if result.is_empty() or not result.collider.has_method("get_ledge_axis"):
+				if result.is_empty():
 					move_dir = Vector3.ZERO
+				#if result.is_empty() or not result.collider.is_in_group("ledge"):
+					#move_dir = Vector3.ZERO
+				#if result.is_empty() or not result.collider.has_method("get_ledge_axis"):
+					#move_dir = Vector3.ZERO
 					
 				# If the ray misses the wall entirely, block the movement input!
 				#if result.is_empty() or result.collider != current_climb_target:
