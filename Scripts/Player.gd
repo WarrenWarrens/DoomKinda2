@@ -7,7 +7,7 @@ const CROUCH_SPEED: float = 3.5
 const MOUSE_SENS: float = 0.002
 const PRONE_SPEED: float = 1.5
 const JUMP_VELOCITY: float = 6.0
-
+var is_in_air: bool = false
 # --- Dodge Variables ---
 const DODGE_SPEED: float = 25.0
 const DODGE_DURATION: float = 0.2 
@@ -77,6 +77,21 @@ var pull_up_progress: float = 0.0
 var pull_up_counted: bool = false
 const PULL_UP_COST: float = 20.0
 const PULL_UP_SPEED: float = 1.5
+
+var push_up_released: bool = true
+var push_up_progress: float = 0.0
+var push_up_counted: bool = false
+const PUSH_UP_COST: float = 20.0
+const PUSH_UP_SPEED: float = 1.5
+
+var sit_up_released: bool = true
+var sit_up_progress: float = 0.0
+var sit_up_counted: bool = false
+const SIT_UP_COST: float = 20.0
+const SIT_UP_SPEED: float = 1.5
+
+
+
 var ledge_can_climb: bool = false
 
 #Ladder
@@ -90,6 +105,11 @@ var current_climb_target: Node3D = null
 var holding_left_hand: bool = true
 var holding_right_hand: bool = true
 const ONE_HAND_DRAIN_MULT: float = 1.75 # Drains 75% faster when using one hand!
+
+var is_wall_running: bool = false
+var wall_normal: Vector3 = Vector3.ZERO
+const WALL_RUN_SPEED: float = 12.0
+const WALL_JUMP_PUSH: float = 8.0
 
 
 func _ready() -> void:
@@ -284,8 +304,23 @@ func _physics_process(delta: float) -> void:
 		return # Skip normal gravity and walking
 	# --- END LADDER OVERRIDE ---
 	
+	is_wall_running = false
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		if is_on_wall() and Input.is_action_just_pressed("up") and not is_hanging and not is_on_ladder:
+			var normal = get_wall_normal()
+			if abs(normal.y) < 0.1:
+				is_wall_running = true
+				wall_normal = normal
+				
+				velocity.y = move_toward(velocity.y, -1.5, 15.0 * delta)
+				var wall_forward = Vector3.UP.cross(wall_normal).normalized()
+				if (-transform.basis.z).dot(wall_forward) < 0:
+					wall_forward = -wall_forward
+				velocity.x = (wall_forward.x * WALL_RUN_SPEED) - (wall_normal.x * 2.0)
+				velocity.z = (wall_forward.z * WALL_RUN_SPEED) - (wall_normal.z * 2.0)
+				
+		if not is_wall_running:
+			velocity += get_gravity() * delta
 
 	#var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -406,6 +441,16 @@ func _physics_process(delta: float) -> void:
 	camera.fov = lerp(camera.fov, target_fov, delta * FOV_TRANS_SPEED)
 	
 	var target_tilt = 0.0
+	
+	if is_wall_running:
+		var right_dot = transform.basis.x.dot(wall_normal)
+		if right_dot > 0:
+			target_tilt = 0.25
+		else:
+			target_tilt = -0.25
+	elif not is_hanging and not is_on_ladder:
+		target_tilt = input_dir.x * -TILT_AMOUNT
+		
 	if not is_hanging and not is_on_ladder:
 		target_tilt = input_dir.x * -TILT_AMOUNT
 	camera.rotation.z = lerp(camera.rotation.z, target_tilt, delta * TILT_SPEED)
@@ -452,7 +497,12 @@ func _physics_process(delta: float) -> void:
 		elif is_crouching: current_speed = CROUCH_SPEED
 		
 		if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching and not is_prone and not is_dodging:
-			velocity.y = JUMP_VELOCITY
+			if is_on_floor():
+				velocity.y = JUMP_VELOCITY
+			elif is_wall_running:
+				velocity = (wall_normal * WALL_JUMP_PUSH) + (Vector3.UP * JUMP_VELOCITY)
+				is_wall_running = false
+				
 		if is_on_floor():
 			if direction:
 				velocity.x = direction.x * current_speed
@@ -460,7 +510,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				velocity.x = move_toward(velocity.x, 0, current_speed)
 				velocity.z = move_toward(velocity.z, 0, current_speed)
-		else:
+		elif not is_wall_running:
 			if direction:
 				velocity.x = lerp(velocity.x,direction.x * current_speed, delta * 3.0)
 				velocity.z = lerp(velocity.z,direction.z * current_speed, delta * 3.0)

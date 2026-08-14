@@ -95,8 +95,9 @@ layout_mode = 2
 text = "0"
 
 [node name="Overlay" type="Sprite2D" parent="." unique_id=1741101678]
+visible = false
 z_index = -1
-position = Vector2(575, 302)
+position = Vector2(572, 552)
 scale = Vector2(1, 1.1512346)
 texture = ExtResource("3_8sq4i")
 

@@ -84,12 +84,10 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="WeaponSprite" type="AnimatedSprite2D" parent="CanvasLayer/Control" unique_id=114979047]
-position = Vector2(-35, -118)
+position = Vector2(-50, -6)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_5ygq1")
 animation = &"Attack"
-frame = 6
-frame_progress = 0.7432295
 
 [node name="GunRays" type="Node3D" parent="." unique_id=282192932]
 
@@ -114,5 +112,6 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer2/CenterContainer" unique_id=1067906239]
+visible = false
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("10_xomv2")
