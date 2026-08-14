@@ -174,7 +174,11 @@ func _physics_process(delta: float) -> void:
 		if pull_up_progress > 0.0:
 			velocity = Vector3.ZERO
 		else:
+		
 			#var input_dir := Input.get_vector("left", "right", "up", "down")
+			if not holding_left_hand or not holding_right_hand:
+				input_dir.x = 0.0 
+			
 			var alignment = sign(transform.basis.x.dot(ledge_axis))
 			if alignment == 0:
 				alignment = 1.0
@@ -276,35 +280,55 @@ func _physics_process(delta: float) -> void:
 	
 	# 1. Determine if we are actively holding sprint (Can't sprint if crouched or prone)
 	var is_sprinting = false
-	if Input.is_action_pressed("sprint") and is_moving and not PlayerStats.get_stealth() and not PlayerStats.get_prone() and PlayerStats.stamina > 0:
+	if Input.is_action_pressed("sprint") and is_moving and not PlayerStats.get_stealth() and not PlayerStats.get_prone() and PlayerStats.stamina > 0 and is_on_floor():
 		is_sprinting = true
 
-	# --- 2. Crouch, Prone & Slide Trigger Logic ---
-	if Input.is_action_just_pressed("prone"):
-		if PlayerStats.get_prone():
-			# Trying to stand up from prone
-			if not ceiling_check.is_colliding():
+	if is_on_floor():
+		if Input.is_action_just_pressed("prone"):
+			if PlayerStats.get_prone():
+				if not ceiling_check.is_colliding():
+					PlayerStats.change_prone()
+			else:
 				PlayerStats.change_prone()
-		else:
-			# Going into prone (Belly flop!)
-			PlayerStats.change_prone()
-			is_sliding = false 
-
-	if Input.is_action_just_pressed("crouch"):
-		if PlayerStats.get_stealth():
-			# Trying to stand up
-			if not ceiling_check.is_colliding():
+				is_sliding = false
+		if Input.is_action_just_pressed("crouch"):
+			if PlayerStats.get_stealth():
+				if not ceiling_check.is_colliding():
+					PlayerStats.change_stealth()
+					is_sliding = false
+			elif PlayerStats.get_prone():
+				if not ceiling_check.is_colliding():
+					PlayerStats.change_stealth()
+			else:
 				PlayerStats.change_stealth()
-				is_sliding = false 
-		elif PlayerStats.get_prone():
-			# Trying to rise from Prone to Crouch
-			if not ceiling_check.is_colliding():
-				PlayerStats.change_stealth()
-		else:
-			# Trying to crouch from standing
-			PlayerStats.change_stealth()
-			if is_sprinting and is_on_floor():
-				is_sliding = true
+				if is_sprinting and is_on_floor():
+					is_sliding = true
+	## --- 2. Crouch, Prone & Slide Trigger Logic ---
+	#if Input.is_action_just_pressed("prone"):
+		#if PlayerStats.get_prone():
+			## Trying to stand up from prone
+			#if not ceiling_check.is_colliding():
+				#PlayerStats.change_prone()
+		#else:
+			## Going into prone (Belly flop!)
+			#PlayerStats.change_prone()
+			#is_sliding = false 
+#
+	#if Input.is_action_just_pressed("crouch"):
+		#if PlayerStats.get_stealth():
+			## Trying to stand up
+			#if not ceiling_check.is_colliding():
+				#PlayerStats.change_stealth()
+				#is_sliding = false 
+		#elif PlayerStats.get_prone():
+			## Trying to rise from Prone to Crouch
+			#if not ceiling_check.is_colliding():
+				#PlayerStats.change_stealth()
+		#else:
+			## Trying to crouch from standing
+			#PlayerStats.change_stealth()
+			#if is_sprinting and is_on_floor():
+				#is_sliding = true
 
 	var is_crouching = PlayerStats.get_stealth()
 	var is_prone = PlayerStats.get_prone()
