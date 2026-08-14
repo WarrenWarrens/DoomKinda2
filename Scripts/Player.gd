@@ -21,6 +21,18 @@ const STAMINA_DELAY: float = 1.5
 const BASE_FOV: float = 75.0
 const SPRINT_FOV: float = 90.0
 const FOV_TRANS_SPEED: float = 8.0
+# --- Camera Dynamics ---
+# Strafe Tilt
+const TILT_AMOUNT: float = 0.03
+const TILT_SPEED: float = 6.0
+
+# Head Bobbing
+const BOB_FREQ: float = 2.4
+const BOB_AMP: float = 0.06
+var t_bob: float = 0.0
+
+# FOV Punch
+var fov_punch: float = 0.0
 
 const SLIDE_FRICTION: float = 12.0
 const SLOPE_BOOST: float = 24.0
@@ -344,9 +356,32 @@ func _physics_process(delta: float) -> void:
 			PlayerStats.stamina_delay_timer = STAMINA_DELAY 
 
 	# --- 5. Dynamic FOV ---
+	var current_horiz_speed = Vector2(velocity.x, velocity.z).length()
 	var target_fov = SPRINT_FOV if (is_sprinting or is_sliding) else BASE_FOV
 	camera.fov = lerp(camera.fov, target_fov, delta * FOV_TRANS_SPEED)
+	
+	if Input.is_action_just_pressed("dodge") and valid_dodge_dir and PlayerStats.stamina >= DODGE_COST:
+		fov_punch = 10.0 # Bumps the camera out instantly
 
+	target_fov += fov_punch
+	fov_punch = lerp(fov_punch, 0.0, delta * 5.0) # Quickly fade the punch away
+	camera.fov = lerp(camera.fov, target_fov, delta * FOV_TRANS_SPEED)
+	
+	var target_tilt = 0.0
+	if not is_hanging and not is_on_ladder:
+		target_tilt = input_dir.x * -TILT_AMOUNT
+	camera.rotation.z = lerp(camera.rotation.z, target_tilt, delta * TILT_SPEED)
+	
+	if is_on_floor() and current_horiz_speed > 1.0 and not is_sliding:
+		t_bob += delta * current_horiz_speed
+	else:
+		# Smoothly return to center when stopping or in the air
+		t_bob = 0.0
+		
+	var target_camera_pos = _calculate_headbob(t_bob)
+	# Lerp the transform origin so it smoothly transitions in and out of the bob
+	camera.transform.origin = camera.transform.origin.lerp(target_camera_pos, delta * 10.0)
+		
 	# --- 6. Apply Movement Speed ---
 	if is_dodging:
 		velocity.x = dodge_direction.x * DODGE_SPEED
@@ -368,7 +403,6 @@ func _physics_process(delta: float) -> void:
 			velocity.x += direction.x * 3.0 * delta
 			velocity.z += direction.z * 3.0 * delta
 			
-		var current_horiz_speed = Vector2(velocity.x, velocity.z).length()
 		if current_horiz_speed <= CROUCH_SPEED:
 			is_sliding = false
 			
@@ -696,3 +730,11 @@ func update_hand_states(wall_normal: Vector3) -> void:
 		# Looking generally forward -> both hands on the wall
 		holding_left_hand = true
 		holding_right_hand = true
+
+func _calculate_headbob(time: float) -> Vector3:
+	var bob_pos = Vector3.ZERO
+	# Up and down movement
+	bob_pos.y = sin(time * BOB_FREQ) * BOB_AMP
+	# Left and right sway (half frequency for the figure-eight shape)
+	bob_pos.x = cos(time * BOB_FREQ / 2.0) * BOB_AMP
+	return bob_pos
