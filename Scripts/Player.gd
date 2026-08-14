@@ -6,6 +6,7 @@ const SPRINT_SPEED: float = 14.0
 const CROUCH_SPEED: float = 3.5
 const MOUSE_SENS: float = 0.002
 const PRONE_SPEED: float = 1.5
+const JUMP_VELOCITY: float = 6.0
 
 # --- Dodge Variables ---
 const DODGE_SPEED: float = 25.0
@@ -174,7 +175,13 @@ func _physics_process(delta: float) -> void:
 		if pull_up_progress > 0.0:
 			velocity = Vector3.ZERO
 		else:
-		
+			if Input.is_action_just_pressed("jump"):
+				velocity = (ledge_normal * 8.0) + (Vector3.UP * JUMP_VELOCITY)
+				stop_hanging()
+				pull_up_progress = 0.0
+				head.position.y = original_head_y
+				return
+			
 			#var input_dir := Input.get_vector("left", "right", "up", "down")
 			if not holding_left_hand or not holding_right_hand:
 				input_dir.x = 0.0 
@@ -233,8 +240,15 @@ func _physics_process(delta: float) -> void:
 			# Automatically let go if we hit the floor while sliding!
 			if is_on_floor():
 				stop_ladder()
-		
+				
 			return
+
+				
+		if Input.is_action_just_pressed("jump"):
+			velocity = (ladder_normal * 8.0) + (Vector3.UP * JUMP_VELOCITY)
+			stop_ladder()
+			return
+		
 		
 		PlayerStats.change_stamina(-current_ladder_drain * delta)
 		PlayerStats.stamina_delay_timer = STAMINA_DELAY
@@ -366,7 +380,7 @@ func _physics_process(delta: float) -> void:
 
 	var valid_dodge_dir = input_dir.x != 0 or input_dir.y > 0 
 	# Can't dodge while crouching OR prone
-	if Input.is_action_just_pressed("dodge") and not is_dodging and not is_crouching and not is_prone and valid_dodge_dir and PlayerStats.stamina >= DODGE_COST:
+	if Input.is_action_just_pressed("dodge") and not is_dodging and not is_crouching and not is_prone and valid_dodge_dir and PlayerStats.stamina >= DODGE_COST and is_on_floor():
 		is_dodging = true
 		dodge_timer = DODGE_DURATION
 		dodge_direction = direction 
@@ -437,12 +451,20 @@ func _physics_process(delta: float) -> void:
 		elif is_prone: current_speed = PRONE_SPEED
 		elif is_crouching: current_speed = CROUCH_SPEED
 		
-		if direction:
-			velocity.x = direction.x * current_speed
-			velocity.z = direction.z * current_speed
+		if Input.is_action_just_pressed("jump") and is_on_floor() and not is_crouching and not is_prone and not is_dodging:
+			velocity.y = JUMP_VELOCITY
+		if is_on_floor():
+			if direction:
+				velocity.x = direction.x * current_speed
+				velocity.z = direction.z * current_speed
+			else:
+				velocity.x = move_toward(velocity.x, 0, current_speed)
+				velocity.z = move_toward(velocity.z, 0, current_speed)
 		else:
-			velocity.x = move_toward(velocity.x, 0, current_speed)
-			velocity.z = move_toward(velocity.z, 0, current_speed)
+			if direction:
+				velocity.x = lerp(velocity.x,direction.x * current_speed, delta * 3.0)
+				velocity.z = lerp(velocity.z,direction.z * current_speed, delta * 3.0)
+
 
 	move_and_slide()
 	update_hud_stats()
